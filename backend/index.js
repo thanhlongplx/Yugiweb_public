@@ -54,7 +54,6 @@ app.get("/user/:email", async (req, res) => {
   }
 });
 
-
 //Dang nhap
 app.post("/login", async (req, res) => {
   const { email, passWord } = req.body;
@@ -64,7 +63,6 @@ app.post("/login", async (req, res) => {
   }
 
   const user = await User.findOne({ email });
-  
 
   if (!user) {
     return res.status(400).send({ error: "Email hoặc mật khẩu không hợp lệ." });
@@ -79,7 +77,7 @@ app.post("/login", async (req, res) => {
   res.send({
     message: "Đăng nhập thành công",
     userEmail: user.email,
-    userCoin: user.coin // Lấy số coin từ thông tin người dùng
+    userCoin: user.coin, // Lấy số coin từ thông tin người dùng
   });
 });
 
@@ -104,12 +102,14 @@ app.post("/register", async (req, res) => {
   }
 });
 
-//Thêm thẻ bài vào bộ sưu tập của người dùng
+// Thêm thẻ bài vào bộ sưu tập của người dùng
 app.post("/user/add-to-collection", async (req, res) => {
-  const { cardName, email } = req.body;
+  const { cardName, email, level, atk, def } = req.body; // Thêm các thông số cần thiết
 
-  if (!cardName || !email) {
-    return res.status(400).send({ error: "Không có thẻ bài và email." });
+  if (!cardName || !email ) {
+    
+    
+    return res.status(400).send({ error: "Thiếu thông tin cần thiết." });
   }
 
   try {
@@ -118,22 +118,61 @@ app.post("/user/add-to-collection", async (req, res) => {
     if (!user) {
       return res.status(404).send({ error: "Người dùng không tồn tại." });
     }
+
     const normalizedCardName = cardName.trim().toLowerCase();
-    const normalizedCollection = user.collection.map(card => card.trim().toLowerCase());
+    const normalizedCollection = user.collection.map((card) =>
+      card.trim().toLowerCase()
+    );
 
     if (normalizedCollection.includes(normalizedCardName)) {
-      return res.status(400).send({ error: "Thẻ bài đã tồn tại trong bộ sưu tập." });
+      return res
+        .status(400)
+        .send({ error: "Thẻ bài đã tồn tại trong bộ sưu tập." });
     }
 
+    // Tính giá trị thẻ bài
+    const cardValue = calculateCardValue(level, atk, def); // Giả sử hàm này tồn tại
+
+    // Kiểm tra xem người dùng có đủ coin không
+    if (user.coin < cardValue) {
+      return res.status(400).send({ error: "Không đủ coin để thêm thẻ bài." });
+    }
+
+    // Thêm thẻ bài vào bộ sưu tập và trừ coin
     user.collection.push(cardName);
+    user.coin -= cardValue; // Trừ coin
     await user.save();
 
-    res.send({ message: "Thẻ bài đã được thêm vào bộ sưu tập." });
+    res.send({
+      message: "Thẻ bài đã được thêm vào bộ sưu tập.",
+      userCoin: user.coin,
+    });
   } catch (error) {
     console.error("Error adding card to collection:", error);
     res.status(500).send({ error: "Đã xảy ra lỗi khi thêm thẻ bài." });
   }
 });
+
+// Hàm tính giá trị thẻ bài (ví dụ)
+function calculateCardValue(level, atk, def) {
+  if (!level) {
+    return 1500;
+  }
+
+  let baseValue;
+  if (level > 7) {
+    baseValue = 2000; // Level lớn hơn 7
+  } else if (level > 4) {
+    baseValue = 1000; // Level lớn hơn 4
+  } else {
+    baseValue = 500; // Các trường hợp còn lại
+  }
+
+  const atkValue = atk * 0.5;
+  const defValue = def * 0.3;
+
+  return baseValue + atkValue + defValue;
+}
 
 // Khai báo router
 const router = express.Router();
@@ -148,7 +187,7 @@ router.post("/remove-from-collection", async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    user.collection = user.collection.filter(name => name !== cardName);
+    user.collection = user.collection.filter((name) => name !== cardName);
     await user.save();
 
     res.status(200).json({ message: "Card removed from collection" });

@@ -58,65 +58,86 @@ class Detail extends Component {
   };
 
   calculateCardValue(level, atk, def) {
-    if(level){
-      const baseValue = level >= 4 ? 100 : 50;
-    const atkValue = atk * 0.5;
-    const defValue = def * 0.3;
-    return baseValue + atkValue + defValue;
+    if (level) {
+      let baseValue;
+      if (level > 7) {
+        baseValue = 2000; // Level lớn hơn 7
+      } else if (level > 4) {
+        baseValue = 1000; // Level lớn hơn 4
+      } else {
+        baseValue = 500; // Các trường hợp còn lại
+      }
+  
+      const atkValue = atk * 0.5;
+      const defValue = def * 0.3;
+      
+      return baseValue + atkValue + defValue;
     }
-    return 1500;
-    
+    return 1500; // Nếu không có level
   }
 
-  addToCollection = async () => {
-    const { newsItem, collection } = this.state;
-    const userEmail = sessionStorage.getItem("userEmail");
-    const userCoin = parseInt(sessionStorage.getItem("userCoin"), 10);
-    if (!userEmail) {
-      toast.error("Bạn cần đăng nhập để thêm thẻ bài vào bộ sưu tập.");
-      return;
+  // Cập nhật hàm addToCollection
+addToCollection = async () => {
+  const { newsItem, collection } = this.state;
+  const userEmail = sessionStorage.getItem("userEmail");
+  const userCoin = parseInt(sessionStorage.getItem("userCoin"), 10);
+
+  if (!userEmail) {
+    toast.error("Bạn cần đăng nhập để thêm thẻ bài vào bộ sưu tập.");
+    return;
+  }
+
+  const cardValue = this.calculateCardValue(newsItem.level, newsItem.atk, newsItem.def);
+  
+  if (userCoin < cardValue) {
+    toast.error("Không có đủ YugiCoin cho hành động này!!!!");
+    return;
+  }
+
+  if (collection.includes(newsItem.name)) {
+    toast.error("Thẻ bài đã tồn tại trong bộ sưu tập.");
+    return;
+  }
+
+  if (!newsItem || !newsItem.name) {
+    toast.error("Thẻ bài này chưa đủ điều kiện để thêm vào bộ sưu tập!!!!");
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:5000/user/add-to-collection", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        cardName: newsItem.name,
+        email: userEmail,
+        level: newsItem.level,
+        atk: newsItem.atk,
+        def: newsItem.def,
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      toast.info("Thẻ bài đã được thêm vào bộ sưu tập!");
+      
+      // Cập nhật state với số coin mới
+      this.setState(prevState => ({
+        userCoin: data.userCoin, // Cập nhật coin từ phản hồi
+        collection: [...prevState.collection, newsItem.name],
+      }));
+      
+      // Cập nhật sessionStorage nếu cần
+      sessionStorage.setItem("userCoin", data.userCoin);
+    } else {
+      const errorData = await response.json();
+      toast.error(`Lỗi: ${errorData.error}`);
     }
-
-    if (userCoin < this.calculateCardValue(newsItem.level, newsItem.atk, newsItem.def)) {
-
-     toast.error("Không có đủ YugiCoin cho hành động này!!!!");
-      return;
-    }
-
-    if (collection.includes(newsItem.name)) {
-      toast.error("Thẻ bài đã tồn tại trong bộ sưu tập.");
-      return;
-    }
-
-    
-
-    if (!newsItem || !newsItem.name) {
-      toast.error("Thẻ bài này chưa đủ điều kiện để thêm vào bộ sưu tập!!!!");
-      return;
-    }
-
-    try {
-      const response = await fetch("http://localhost:5000/user/add-to-collection", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cardName: newsItem.name, email: userEmail }),
-      });
-
-      if (response.ok) {
-        toast.info("Thẻ bài đã được thêm vào bộ sưu tập!");
-        
-        this.setState(prevState => ({
-          collection: [...prevState.collection, newsItem.name],
-        }));
-      } else {
-        const errorData = await response.json();
-        toast.error(`Lỗi: ${errorData.error}`);
-      }
-    } catch (error) {
-      console.error("Error adding to collection:", error);
-      toast.error("Đã xảy ra lỗi khi thêm thẻ bài vào bộ sưu tập.");
-    }
-  };
+  } catch (error) {
+    console.error("Error adding to collection:", error);
+    toast.error("Đã xảy ra lỗi khi thêm thẻ bài vào bộ sưu tập.");
+  }
+};
 
   componentDidMount() {
     this.fetchCardDetails(this.props.id);
@@ -152,12 +173,22 @@ class Detail extends Component {
               <img src={newsItem.card_images[0].image_url} className="img-fluid rounded shadow mb-4" style={{ width: "50%" }} alt={newsItem.name} />
               <p className="text-white font-weight-bold" style={{ fontSize: "1.25em" }}>{newsItem.desc}</p>
               <p className="text-white">ATK: {newsItem.atk} DEF: {newsItem.def}</p>
-              <button onClick={this.addToCollection} className="AddColbtn ">
-                <div className="d-flex">
-                  <h2 className="mb-0 me-2">Price: {this.calculateCardValue(newsItem.level, newsItem.atk, newsItem.def)}</h2>
-                  <img width="50" src="/YugiCoin.png" alt="YugiCoin Logo" className="me-2" />
-                </div>
-              </button>
+              <button
+  onClick={() => {
+    const cardValue = this.calculateCardValue(newsItem.level, newsItem.atk, newsItem.def);
+    const confirmMessage = `Bạn có chắc chắn muốn thêm thẻ bài này vào bộ sưu tập? Giá: ${cardValue} YugiCoin.`;
+    
+    if (window.confirm(confirmMessage)) {
+      this.addToCollection();
+    }
+  }}
+  className="AddColbtn"
+>
+  <div className="d-flex">
+    <h2 className="mb-0 me-2">Price: {this.calculateCardValue(newsItem.level, newsItem.atk, newsItem.def)}</h2>
+    <img width="50" src="/YugiCoin.png" alt="YugiCoin Logo" className="me-2" />
+  </div>
+</button>
             </div>
           </div>
           <div className="container">

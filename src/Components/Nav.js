@@ -11,13 +11,15 @@ class Nav extends Component {
   }
 
   componentDidMount() {
-    // Cập nhật username khi component mount
+    // Cập nhật username và userCoin khi component mount
     this.updateUsername();
     this.updateUserCoin();
 
     // Kiểm tra thường xuyên
-    this.interval = setInterval(this.updateUsername, 1000);
-    this.interval = setInterval(this.updateUserCoin, 1000);
+    this.interval = setInterval(() => {
+      this.updateUsername();
+      this.updateUserCoin();
+    }, 1000);
   }
 
   componentWillUnmount() {
@@ -31,10 +33,11 @@ class Nav extends Component {
       this.setState({ username: email || "User" });
     }
   };
+
   updateUserCoin = () => {
     const coin = sessionStorage.getItem("userCoin");
     if (coin !== this.state.userCoin) {
-      this.setState({ userCoin: coin || "$" });
+      this.setState({ userCoin: coin || "" });
     }
   };
 
@@ -122,10 +125,7 @@ class Nav extends Component {
                 >
                   Categories
                 </NavLink>
-                <ul
-                  className="dropdown-menu"
-                  aria-labelledby="navbarDropdownCategories"
-                >
+                <ul className="dropdown-menu" aria-labelledby="navbarDropdownCategories">
                   <li>
                     <NavLink className="dropdown-item" to="/WaterCards.html">
                       Water
@@ -137,10 +137,7 @@ class Nav extends Component {
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink
-                      className="dropdown-item"
-                      to="/DarkAttributeMonsters.html"
-                    >
+                    <NavLink className="dropdown-item" to="/DarkAttributeMonsters.html">
                       Dark Attribute Monsters
                     </NavLink>
                   </li>
@@ -154,7 +151,7 @@ class Nav extends Component {
                     style={{ width: "30px", marginLeft: "0px" }}
                   />
                 </div>
-                <span>: {userCoin}YC</span>
+                <span>: {userCoin} YC</span>
               </li>
             </ul>
           </div>
