@@ -1,0 +1,42 @@
+.minigame-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f0f0; /* Màu nền sáng */
+    padding: 20px;
+    border: 2px solid #333; /* Viền cho khung cảnh */
+    border-radius: 8px;
+  }
+  
+  .title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .game-area {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .field {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+  }
+  
+  .player-zone, .opponent-zone {
+    margin: 10px 0;
+    padding: 10px;
+    border: 2px solid #000; /* Viền cho khu vực người chơi và đối thủ */
+    border-radius: 5px;
+  }
+  
+  .card-slot {
+    width: 100px; /* Kích thước thẻ */
+    height: 150px; /* Kích thước thẻ */
+    background-color: #fff; /* Màu nền cho thẻ */
+    border: 1px solid #000; /* Viền cho thẻ */
+    margin: 5px auto; /* Giữa thẻ */
+    border-radius: 3px;
+  }

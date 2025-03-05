@@ -1,0 +1,66 @@
+.AddColbtn {
+  background-color: gold; /* Màu vàng */
+  border: none;
+  color: black; /* Màu chữ trắng */
+  padding: 10px 20px;
+  font-size: 18px;
+  border-radius: 8px; /* Bo góc */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Đổ bóng */
+  transition: transform 0.3s, box-shadow 0.3s; /* Thay đổi tốc độ chuyển tiếp */
+}
+
+.AddColbtn:hover {
+  transform: translateY(-5px) scale(1.1); /* Di chuyển lên và phóng to */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5); /* Đổ bóng mạnh hơn */
+  background-color: greenyellow; /* Màu vàng */
+  transition: all 0.5s;
+}
+.navbar-brand {
+  font-size: 24px; /* Kích thước chữ lớn hơn */
+  font-weight: bold; /* Đậm chữ */
+  font-family: "Arial", sans-serif; /* Font chữ đẹp hơn */
+  text-decoration: none; /* Loại bỏ gạch chân nếu có */
+  color: #000; /* Màu chữ */
+}
+.toast {
+  background-color: #f8f9fa; /* Màu nền cho toast */
+  border-radius: 5px; /* Bo góc */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng */
+}
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+}
+.card {
+  position: relative;
+}
+
+.card:hover .delete-btn {
+  display: block; /* Hiển thị nút khi hover */
+}
+
+.delete-btn {
+  display: none; /* Ẩn nút mặc định */
+  background-color: red; /* Nền đỏ cho nút xóa */
+  position: relative;
+  opacity: 50%;
+  height: 10%;
+  border-radius: 50px;
+  color: white;
+  border: solid black;
+  cursor: pointer;
+}

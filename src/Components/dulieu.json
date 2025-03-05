@@ -1,0 +1,95 @@
+[
+  {
+    "id": "8",
+    "slug": "blue-eyes-white-dragon",
+    "ten": "Mirror Force",
+    "trichDan": "Lá bài huyền thoại với sức mạnh áp đảo.",
+    "noiDung": "Mirror Force là một trong những lá bài mang tính biểu tượng nhất của Yu-Gi-Oh! với sức mạnh tấn công lên đến 3000 điểm. Với hình dáng uy nghiêm và khả năng hủy diệt mạnh mẽ, đây là lá bài được nhiều đấu thủ săn đón và sử dụng trong các chiến lược tấn công nhanh.",
+    "hinhAnh": "https://photo.znews.vn/w860/Uploaded/piqbzcvo/2022_07_07/7.png",
+    "danhMuc": "Quái thú"
+  },
+  {
+    "id": "9",
+    "slug": "dark-magician",
+    "ten": "Phù Thủy Áo Đen",
+    "trichDan": "Pháp sư mạnh nhất trong số các pháp sư hắc ám.",
+    "noiDung": "Phù Thủy Áo Đen là lá bài biểu tượng của nhân vật Yugi Mutou, sở hữu sức mạnh công kích 2500 điểm. Với sự kết hợp cùng những lá bài phép mạnh mẽ, nó có thể tạo ra các chiến thuật phòng thủ và tấn công linh hoạt, giúp người chơi chiếm ưu thế trên sân đấu.",
+    "hinhAnh": "https://photo.znews.vn/w660/Uploaded/piqbzcvo/2022_07_07/3.jpeg",
+    "danhMuc": "Pháp sư"
+  },
+  {
+    "id": "10",
+    "slug": "red-eyes-black-dragon",
+    "ten": "Rồng Đen Mắt Đỏ",
+    "trichDan": "Một con rồng huyền thoại với tiềm năng vô hạn.",
+    "noiDung": "Rồng Đen Mắt Đỏ tuy có chỉ số công kích thấp hơn Rồng Trắng Mắt Xanh, nhưng nó lại mang tiềm năng phát triển lớn nhờ vào nhiều lá bài hỗ trợ đặc biệt. Đây là lá bài được Joey Wheeler sử dụng và là nền tảng cho nhiều chiến thuật mạnh mẽ trong trò chơi Yu-Gi-Oh!.",
+    "hinhAnh": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1TSC02C5ykg6kAPAIRk01xnZsq0Zm0SiZ6g&s",
+    "danhMuc": "Quái thú"
+  },
+  {
+    "id": "11",
+    "slug": "exodia-the-forbidden-one",
+    "ten": "Exodia - Kẻ Bị Phong Ấn",
+    "trichDan": "Lá bài huyền thoại với chiến thắng ngay lập tức.",
+    "noiDung": "Exodia là một trong những lá bài hiếm hoi có khả năng giành chiến thắng ngay lập tức nếu người chơi thu thập đủ 5 mảnh của nó. Với sức mạnh thần thoại, Exodia đã trở thành nỗi khiếp sợ của nhiều đấu thủ trong thế giới Yu-Gi-Oh!.",
+    "hinhAnh": "https://photo.znews.vn/w860/Uploaded/piqbzcvo/2022_07_07/2.png",
+    "danhMuc": "Thần thoại"
+  },
+  {
+    "id": "12",
+    "slug": "obelisk-the-tormentor",
+    "ten": "Obelisk - Thần Công Kích",
+    "trichDan": "Một trong ba vị thần Ai Cập với sức mạnh vô song.",
+    "noiDung": "Obelisk là một trong ba vị thần Ai Cập trong Yu-Gi-Oh! với khả năng tiêu diệt toàn bộ quái thú đối phương trên sân khi hiến tế hai quái vật. Đây là lá bài mang sức mạnh bá đạo, thể hiện quyền năng tối thượng trên chiến trường.",
+    "hinhAnh": "https://photo.znews.vn/w860/Uploaded/piqbzcvo/2022_07_07/8.png",
+    "danhMuc": "Thần bài"
+  },
+
+
+    {
+      "id": "13",
+      "slug": "suc-manh-cua-blue-eyes-white-dragon",
+      "ten": "Sức mạnh của Blue-Eyes White Dragon",
+      "trichDan": "Huyền thoại rồng trắng mạnh nhất trong lịch sử.",
+      "noiDung": "Blue-Eyes White Dragon là một trong những lá bài biểu tượng nhất của Yu-Gi-Oh!. Sở hữu sức mạnh tấn công lên đến 3000, đây là một trong những quái thú mạnh nhất trong bộ bài truyền thống. Với khả năng tấn công áp đảo, Blue-Eyes White Dragon luôn là lựa chọn hàng đầu trong các chiến lược tấn công toàn diện. Hãy cùng tìm hiểu lịch sử, chiến thuật và những phiên bản đặc biệt của lá bài huyền thoại này.",
+      "hinhAnh": "https://yugiohfmii.wordpress.com/wp-content/uploads/2016/08/bywd.jpg",
+      "danhMuc": "Quái thú"
+    },
+    {
+      "id": "14",
+      "slug": "su-troi-day-cua-dark-magician",
+      "ten": "Sự trỗi dậy của Dark Magician",
+      "trichDan": "Lá bài pháp sư huyền thoại của Yugi Mutou.",
+      "noiDung": "Dark Magician không chỉ là một lá bài mạnh mẽ mà còn mang ý nghĩa biểu tượng đối với người chơi Yu-Gi-Oh!. Được sử dụng bởi nhân vật chính Yugi Mutou, Dark Magician luôn đóng vai trò quan trọng trong những trận đấu cam go. Với sự hỗ trợ từ các lá bài như Dark Magic Attack hay Magician's Navigation, lá bài này có thể tạo ra những chiến thuật tấn công đầy uy lực. Hãy cùng khám phá các cách tối ưu hóa Dark Magician trong bộ bài của bạn.",
+      "hinhAnh": "https://cdn.trangcongnghe.vn/uploads/posts/2016-10/ban-co-biet-ve-gia-cua-nhung-la-bai-yugi-oh-dat-nhat-the-gioi-phan-1_2.jpeg",
+      "danhMuc": "Pháp sư"
+    },
+    {
+      "id": "15",
+      "slug": "cac-rong-huyen-thoai",
+      "ten": "Các rồng huyền thoại",
+      "trichDan": "Những quái thú rồng đáng sợ nhất trong Yu-Gi-Oh!.",
+      "noiDung": "Từ Blue-Eyes White Dragon, Red-Eyes Black Dragon cho đến các rồng mạnh mẽ như Five-Headed Dragon hay Stardust Dragon, Yu-Gi-Oh! sở hữu một kho tàng quái thú rồng huyền thoại. Mỗi lá bài rồng đều có sức mạnh riêng và phù hợp với nhiều phong cách chơi khác nhau. Bài viết này sẽ tổng hợp những lá bài rồng mạnh nhất cùng chiến thuật sử dụng tối ưu trong các trận đấu.",
+      "hinhAnh": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQR8peqTenh_FmSPkvryM7TfCRyWiPyV3uDrWqyiGUHA8WzrpZCGXH2oaZUHty0goEzOJQ&usqp=CAU",
+      "danhMuc": "Quái thú"
+    },
+    {
+      "id": "16",
+      "slug": "the-gioi-cua-god-card",
+      "ten": "Thế giới của God Card",
+      "trichDan": "Bộ ba vị thần quyền năng của Yu-Gi-Oh!.",
+      "noiDung": "Ba lá bài thần thánh Obelisk the Tormentor, Slifer the Sky Dragon và The Winged Dragon of Ra là những quái thú huyền thoại trong thế giới Yu-Gi-Oh!. Với sức mạnh vô song và khả năng đặc biệt, chúng đã trở thành biểu tượng của các trận đấu đỉnh cao. Bài viết này sẽ giúp bạn hiểu rõ hơn về nguồn gốc, hiệu ứng và chiến thuật sử dụng ba vị thần này trong các trận đấu Yu-Gi-Oh! hiện đại.",
+      "hinhAnh": "https://www.dexerto.com/cdn-image/wp-content/uploads/2023/11/02/Secret-Rare-Yugioh.v1-681x1024.jpg?width=1200&quality=75&format=auto",
+      "danhMuc": "Thần thánh"
+    },
+    {
+      "id": "17",
+      "slug": "nhung-la-bai-hiem-nhat",
+      "ten": "Những lá bài hiếm nhất",
+      "trichDan": "Tổng hợp những lá bài giá trị nhất trong lịch sử.",
+      "noiDung": "Trong lịch sử Yu-Gi-Oh!, có rất nhiều lá bài hiếm được săn đón bởi các nhà sưu tập và game thủ. Những lá bài như Black Luster Soldier (Prismatic Secret Rare), Tyler the Great Warrior hay Tournament Black Luster Soldier có giá trị hàng chục ngàn đô la trên thị trường. Hãy cùng tìm hiểu về những lá bài hiếm nhất từng xuất hiện, giá trị hiện tại của chúng và lý do tại sao chúng trở nên đặc biệt đến vậy.",
+      "hinhAnh": "https://www.konami.com/games_cms/promo/na/uploads/4041-us_w-cr_500.png",
+      "danhMuc": "Hiếm có"
+    }
+  ]
+  

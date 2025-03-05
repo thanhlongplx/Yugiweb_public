@@ -1,0 +1,10 @@
+.circle {
+  display: inline-flex; /* Để căn giữa nội dung */
+  justify-content: center; /* Căn giữa nội dung theo chiều ngang */
+  align-items: center; /* Căn giữa nội dung theo chiều dọc */
+  width: 40px; /* Đặt chiều rộng */
+  height: 40px; /* Đặt chiều cao */
+  border-radius: 50px; /* Tạo hình tròn */
+  background-color: black; /* Màu nền */
+  color: white; /* Màu chữ */
+}
