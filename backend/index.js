@@ -3,8 +3,6 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 
-
-
 // Kết nối đến MongoDB
 mongoose
   .connect("mongodb://localhost:27017/", {
@@ -20,12 +18,13 @@ mongoose
 // Định nghĩa schema cho người dùng
 const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  passWord: { type: String, required: false },
-  date: { type: Date, default: Date.now },
-  collection: { type: [String], default: [] },
-  coin: { type: Number, default: 10000 },
-  role: { type: String, default: "customer" },
+  username: { type: String, required: true, unique: true }, // Tên người dùng
+  email: { type: String, required: false }, // Thêm trường email
+  passWord: { type: String, required: true }, // Mật khẩu
+  date: { type: Date, default: Date.now }, // Ngày tạo
+  collection: { type: [String], default: [] }, // Bộ sưu tập
+  coin: { type: Number, default: 10000 }, // Số tiền
+  role: { type: String, default: "customer" }, // Vai trò
 });
 
 const User = mongoose.model("users", UserSchema);
@@ -34,10 +33,12 @@ const User = mongoose.model("users", UserSchema);
 const app = express();
 app.use(express.json());
 // app.use(cors());
-app.use(cors({
-  origin: "http://localhost:3000", // Địa chỉ frontend của bạn
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Địa chỉ frontend của bạn
+    credentials: true,
+  })
+);
 // Đặt header chính sách bảo mật
 app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
@@ -61,39 +62,45 @@ app.get("/users", async (req, res) => {
   }
 });
 
-
 app.post("/login-google", async (req, res) => {
   const { email, name } = req.body;
 
   try {
     console.log("Received request body:", req.body);
-    let user = await User.findOne({ email });
-    
-    if (!user) {
-      // Tạo một mật khẩu ngẫu nhiên (hoặc bạn có thể sử dụng một mật khẩu mặc định)
-      const generatedPassword = "defaultPassword"; // Hoặc tạo một mật khẩu ngẫu nhiên
 
-      // Băm mật khẩu
-      const hashedPassword = await bcrypt.hash(generatedPassword, 10);
-      
+    // Kiểm tra xem email có hợp lệ không
+    if (!email) {
+      return res.status(400).send({ error: "Email là bắt buộc." });
+    }
+
+    // Tìm người dùng dựa trên email
+    let user = await User.findOne({ email });
+
+    if (!user) {
       // Nếu người dùng không tồn tại, tạo mới
+      const generatedPassword = "defaultPassword"; // Tạo mật khẩu ngẫu nhiên
+      const hashedPassword = await bcrypt.hash(generatedPassword, 10); // Băm mật khẩu
+
+      // Tạo người dùng mới
       user = new User({
-        name: name || email,
-        email,
+        name: name || email, // Nếu không có tên, sử dụng email
+        username: email, // Sử dụng email làm username
+        email, // Lưu email
         passWord: hashedPassword, // Lưu mật khẩu đã được băm
-        coin: 10000,
-        role: "customer",
+        coin: 10000, // Số tiền khởi điểm
+        role: "customer", // Vai trò mặc định
       });
-      await user.save();
+
+      await user.save(); // Lưu người dùng vào cơ sở dữ liệu
       console.log("New user created:", user);
     }
 
     // Gửi phản hồi thành công
     res.send({
       message: "Đăng nhập thành công",
-      userEmail: user.email,
-      userCoin: user.coin,
-      userRole: user.role,
+      userUsername: user.username, // Trả về username
+      userCoin: user.coin, // Trả về số tiền
+      userRole: user.role, // Trả về vai trò
     });
   } catch (error) {
     console.error("Error during Google login:", error);
@@ -106,14 +113,14 @@ app.post("/login-facebook", async (req, res) => {
   try {
     console.log("Received request body:", req.body);
     let user = await User.findOne({ email });
-    
+
     if (!user) {
       // Tạo một mật khẩu ngẫu nhiên
       const generatedPassword = "defaultPassword"; // Hoặc tạo một mật khẩu ngẫu nhiên
 
       // Băm mật khẩu
       const hashedPassword = await bcrypt.hash(generatedPassword, 10);
-      
+
       // Nếu người dùng không tồn tại, tạo mới
       user = new User({
         name: name || email,
@@ -139,16 +146,15 @@ app.post("/login-facebook", async (req, res) => {
   }
 });
 
-
 // API to update user information
-app.put("/user/update/:email", async (req, res) => {
-  const { email } = req.params;
+app.put("/user/update/:username", async (req, res) => {
+  const { username } = req.params;
   const { name, role } = req.body;
 
   try {
     const user = await User.findOneAndUpdate(
-      { email },
-      { name, role },
+      { username },
+      { name, role }, // Cập nhật tên và vai trò
       { new: true } // Return the updated document
     );
 
@@ -186,9 +192,9 @@ app.put("/user/update-coin/:email", async (req, res) => {
   }
 });
 
-app.get("/user/:email", async (req, res) => {
+app.get("/user/:username", async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.params.email });
+    const user = await User.findOne({ username: req.params.username });
 
     if (!user) {
       return res.status(404).send({ error: "User not found" });
@@ -196,10 +202,10 @@ app.get("/user/:email", async (req, res) => {
 
     // Trả về thông tin người dùng bao gồm tên, email và bộ sưu tập
     res.send({
-      name: user.name,  // Thêm trường tên
+      name: user.username, // Thêm trường tên
       email: user.email, // Thêm trường email
-      coin: user.coin,   // Thêm trường coin
-      collection: user.collection || [] // Bộ sưu tập
+      coin: user.coin, // Thêm trường coin
+      collection: user.collection || [], // Bộ sưu tập
     });
   } catch (err) {
     console.error("❌ Error fetching user collection:", err);
@@ -209,45 +215,56 @@ app.get("/user/:email", async (req, res) => {
 
 //Dang nhap
 app.post("/login", async (req, res) => {
-  const { email, passWord } = req.body;
+  const { username, passWord } = req.body;
 
-  if (!email || !passWord) {
-    return res.status(400).send({ error: "Email và mật khẩu là bắt buộc." });
+  if (!username || !passWord) {
+    return res.status(400).send({ error: "Username và mật khẩu là bắt buộc." });
   }
 
-  const user = await User.findOne({ email });
+  // Tìm người dùng theo username
+  const user = await User.findOne({ username }); // Thay đổi từ email sang username
 
   if (!user) {
-    return res.status(400).send({ error: "Email hoặc mật khẩu không hợp lệ." });
+    return res
+      .status(400)
+      .send({ error: "Username hoặc mật khẩu không hợp lệ." });
   }
 
+  // So sánh mật khẩu
   const isMatch = await bcrypt.compare(passWord, user.passWord);
   if (!isMatch) {
-    return res.status(400).send({ error: "Email hoặc mật khẩu không hợp lệ." });
+    return res
+      .status(400)
+      .send({ error: "Username hoặc mật khẩu không hợp lệ." });
   }
 
   // Gửi phản hồi với thông tin người dùng
   res.send({
     message: "Đăng nhập thành công",
-    userEmail: user.email,
-    userCoin: user.coin, // Lấy số coin từ thông tin người dùng
+    userUsername: user.username, // Sửa lại để trả về username
+    userCoin: user.coin,
     userRole: user.role,
   });
 });
-
 // Đăng ký người dùng
 app.post("/register", async (req, res) => {
-  const { name, email, passWord } = req.body;
+  const { name, username, passWord } = req.body;
 
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    return res.status(400).send({ error: "Email đã được sử dụng." });
+  // Kiểm tra tính duy nhất của username
+  const existingUserByUsername = await User.findOne({ username });
+
+  if (existingUserByUsername) {
+    return res.status(400).send({ error: "Username đã được sử dụng." });
   }
 
+  // Băm mật khẩu
   const hashedPassword = await bcrypt.hash(passWord, 10);
+
+  // Tạo người dùng mới mà không cần email
   const newUser = new User({
     name,
-    email,
+    email:'',
+    username,
     passWord: hashedPassword,
     coin: 10000,
   });
@@ -260,17 +277,16 @@ app.post("/register", async (req, res) => {
     res.status(500).send({ error: "Internal Server Error" });
   }
 });
-
 // Thêm thẻ bài vào bộ sưu tập của người dùng
 app.post("/user/add-to-collection", async (req, res) => {
-  const { cardName, email, level, atk, def } = req.body; // Thêm các thông số cần thiết
+  const { cardName, username, level, atk, def } = req.body; // Thêm các thông số cần thiết
 
-  if (!cardName || !email) {
+  if (!cardName || !username) {
     return res.status(400).send({ error: "Thiếu thông tin cần thiết." });
   }
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ username });
 
     if (!user) {
       return res.status(404).send({ error: "Người dùng không tồn tại." });
@@ -397,11 +413,11 @@ app.delete("/user/delete/:email", async (req, res) => {
 });
 // Endpoint xóa thẻ bài khỏi bộ sưu tập
 router.post("/remove-from-collection", async (req, res) => {
-  const { cardName, email, level, atk, def } = req.body;
+  const { cardName, username, level, atk, def } = req.body;
   const coinRecover = calculateCardValue(level, atk, def);
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ username });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }

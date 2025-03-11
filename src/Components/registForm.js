@@ -1,15 +1,13 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { NavLink, useNavigate } from "react-router-dom";
-import { auth, provider, facebookProvider } from "./firebase"; // Import Firebase
-import { signInWithPopup } from "firebase/auth";
 
 class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
       name: "",
-      email: "",
+      username: "",
       passWord: "",
       confirmPassword: "",
       error: "",
@@ -18,7 +16,7 @@ class Register extends Component {
 
   handleOnSubmit = async (e) => {
     e.preventDefault();
-    const { name, email, passWord, confirmPassword } = this.state;
+    const { name, username, passWord, confirmPassword } = this.state;
 
     // Kiểm tra xác nhận mật khẩu
     if (passWord !== confirmPassword) {
@@ -29,9 +27,10 @@ class Register extends Component {
     // Gửi dữ liệu đến server
     let result = await fetch("http://localhost:5000/register", {
       method: "POST",
-      body: JSON.stringify({ name, email, passWord }),
+      body: JSON.stringify({ name, username, passWord }), // Gửi dữ liệu đăng ký
       headers: { "Content-Type": "application/json" },
     });
+
     result = await result.json();
 
     if (result.error) {
@@ -40,68 +39,11 @@ class Register extends Component {
       alert("Đăng ký thành công");
       this.setState({
         name: "",
-        email: "",
+        username: "",
         passWord: "",
         confirmPassword: "",
         error: "",
       });
-    }
-  };
-  // handleFacebookSignIn = async () => {
-  //   try {
-  //     const result = await signInWithPopup(auth, facebookProvider);
-  //     const user = result.user;
-
-  //     // Gửi thông tin người dùng đến server để tạo tài khoản
-  //     const response = await fetch("http://localhost:5000/login-google", {
-  //       method: "POST",
-  //       body: JSON.stringify({ email: user.email, name: user.displayName }),
-  //       headers: { "Content-Type": "application/json" },
-  //     });
-
-  //     const data = await response.json();
-  //     if (response.ok) {
-  //       alert("Đăng ký thành công bằng Facebook");
-  //       // Lưu thông tin cần thiết vào sessionStorage
-  //       sessionStorage.setItem("userEmail", data.userEmail);
-  //       sessionStorage.setItem("userCoin", data.userCoin);
-  //       sessionStorage.setItem("userRole", data.userRole);
-  //       this.props.navigate("/"); // Redirect to home
-  //     } else {
-  //       this.setState({ error: data.error });
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during Facebook sign-in:", error);
-  //     this.setState({ error: "Đã xảy ra lỗi khi đăng ký bằng Facebook." });
-  //   }
-  // };
-
-  handleGoogleSignIn = async () => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      // Gửi thông tin người dùng đến server để tạo tài khoản
-      const response = await fetch("http://localhost:5000/login-google", {
-        method: "POST",
-        body: JSON.stringify({ email: user.email, name: user.displayName }),
-        headers: { "Content-Type": "application/json" },
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        alert("Đăng nhập thành công bằng Google");
-        // Lưu thông tin cần thiết vào sessionStorage
-        sessionStorage.setItem("userEmail", data.userEmail);
-        sessionStorage.setItem("userCoin", data.userCoin);
-        sessionStorage.setItem("userRole", data.userRole);
-        this.props.navigate("/"); // Redirect to home
-      } else {
-        this.setState({ error: data.error });
-      }
-    } catch (error) {
-      console.error("Error during Google sign-in:", error);
-      this.setState({ error: "Đã xảy ra lỗi khi đăng ký bằng Google." });
     }
   };
 
@@ -110,7 +52,7 @@ class Register extends Component {
   };
 
   render() {
-    const { name, email, passWord, confirmPassword, error } = this.state;
+    const { name, username, passWord, confirmPassword, error } = this.state;
 
     return (
       <div className="container mt-5">
@@ -136,15 +78,15 @@ class Register extends Component {
             />
           </div>
           <div className="form-group mb-3">
-            <label htmlFor="email" className="font-weight-bold">
-              Email
+            <label htmlFor="username" className="font-weight-bold">
+              Username
             </label>
             <input
-              type="email"
-              name="email"
+              type="text"
+              name="username"
               className="form-control"
-              placeholder="Type your email"
-              value={email}
+              placeholder="Type your username"
+              value={username}
               onChange={this.handleChange}
               required
             />
@@ -182,7 +124,6 @@ class Register extends Component {
             className="btn btn-danger btn-block me-auto ms-auto"
           >
             Register
-            <i className="fas fa-arrow-right" style={{ marginLeft: "8px" }}></i>
           </button>
 
           <NavLink
@@ -192,18 +133,6 @@ class Register extends Component {
             Login
           </NavLink>
         </form>
-
-        <button
-          onClick={this.handleGoogleSignIn}
-          className="btn btn-white text-black border-primary btn-block mt-3 w-25 me-auto ms-auto"
-        >
-          <img
-            src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA"
-            alt="Google Logo"
-            style={{ width: "20px", marginRight: "8px" }}
-          />
-          Login With Google
-        </button>
       </div>
     );
   }

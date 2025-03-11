@@ -111,10 +111,11 @@ class Detail extends Component {
   // Cập nhật hàm addToCollection
 addToCollection = async () => {
   const { newsItem, collection } = this.state;
-  const userEmail = sessionStorage.getItem("userEmail");
+  // const userEmail = sessionStorage.getItem("userEmail");
+  const userName = sessionStorage.getItem("userUsername");
   const userCoin = parseInt(sessionStorage.getItem("userCoin"), 10);
 
-  if (!userEmail) {
+  if (!userName) {
     toast.error("Bạn cần đăng nhập để thêm thẻ bài vào bộ sưu tập.");
     return;
   }
@@ -142,7 +143,7 @@ addToCollection = async () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         cardName: newsItem.name,
-        email: userEmail,
+        username: userName,
         level: newsItem.level,
         atk: newsItem.atk,
         def: newsItem.def,

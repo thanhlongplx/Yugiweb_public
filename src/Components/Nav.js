@@ -5,7 +5,7 @@ class Nav extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: sessionStorage.getItem("userEmail") || "User",
+      username: sessionStorage.getItem("userUsername") || "User",
       userCoin: sessionStorage.getItem("userCoin") || "0",
       userRole: sessionStorage.getItem("userRole") || "customer",
     };
@@ -23,12 +23,12 @@ class Nav extends Component {
   }
 
   updateUserInfo = () => {
-    const email = sessionStorage.getItem("userEmail");
+    const name = sessionStorage.getItem("userUsername");
     let coin = parseFloat(sessionStorage.getItem("userCoin")) || 0;
     coin = Math.round(coin * 100) / 100;
 
     this.setState({
-      username: email || "User",
+      username: name || "User",
       userCoin: coin,
       userRole: sessionStorage.getItem("userRole") || "customer",
     });
@@ -169,12 +169,12 @@ class Nav extends Component {
                   </li>
                 </ul>
               </li>
-              <li className="list-group-item d-flex justify-content-between align-items-center text-white bg-dark">
+              <li className=" list-group-item d-flex justify-content-between align-items-center text-white bg-dark">
                 <div className="d-flex align-items-center">
                   <img
                     src="/YugiCoin2.png"
                     alt="YugiCoin"
-                    style={{ width: "30px", marginLeft: "0px" }}
+                    style={{ width: "30px" }}
                   />
                 </div>
                 <span>: {this.formatNumber(userCoin)} YC</span>

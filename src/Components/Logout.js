@@ -15,8 +15,8 @@ const Logout = () => {
 
   return (
     <div className="container mt-5">
-      <div className=" shadow">
-        <div className=" text-center">
+      <div className="shadow">
+        <div className="text-center">
           <h1 className="mb-4">Bạn có chắc chắn muốn đăng xuất?</h1>
           <button className="btn btn-danger btn-lg" onClick={handleLogout}>
             Đăng Xuất

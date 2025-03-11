@@ -43,7 +43,7 @@ const Community = () => {
           <div className="col-md-4 mb-4" key={user.email}>
             <div className="community-card">
               <h5>
-                <Link to={`/user/${user.email}`} className="text-light">
+                <Link to={`/user/${user.username}`} className="text-light">
                   {user.name}
                 </Link>
               </h5>

@@ -4,7 +4,7 @@ import axios from "axios";
 import "./Css/Collection.css";
 
 const Collection = () => {
-  const storedEmail = sessionStorage.getItem("userEmail");
+  const storedUsername = sessionStorage.getItem("userUsername"); // Thay đổi từ userEmail thành userUsername
   const [collection, setCollection] = useState([]);
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,7 +15,8 @@ const Collection = () => {
   );
 
   useEffect(() => {
-    if (!storedEmail) {
+    console.log("Stored Username:", storedUsername); // Kiểm tra giá trị username
+    if (!storedUsername) {
       setError("User not logged in.");
       setLoading(false);
       return;
@@ -24,10 +25,11 @@ const Collection = () => {
     const fetchUserCollection = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/user/${storedEmail}`
-        );
+          `http://localhost:5000/user/${storedUsername}`
+        ); // Đảm bảo sử dụng username
         setCollection(response.data.collection || []);
       } catch (err) {
+        console.error("Error fetching user collection:", err); // Log chi tiết lỗi
         setError("Error fetching user collection");
       } finally {
         setLoading(false);
@@ -35,7 +37,7 @@ const Collection = () => {
     };
 
     fetchUserCollection();
-  }, [storedEmail]);
+  }, [storedUsername]);
 
   useEffect(() => {
     if (collection.length === 0) return;
@@ -65,9 +67,8 @@ const Collection = () => {
     setTotalValue(total);
   }, [cards, collection]);
 
-  // Hàm tính giá trị thẻ bài (ví dụ)
+  // Hàm tính giá trị thẻ bài
   function calculateCardValue(level, atk, def, name) {
-    // Kiểm tra nếu tên là một trong những thẻ đặc biệt
     const specialCards = [
       "Slifer the Sky Dragon",
       "Obelisk the Tormentor",
@@ -79,44 +80,37 @@ const Collection = () => {
       "Hamon, Lord of Striking Thunder",
       "Armityle the Chaos Phantasm",
       "Armityle the Chaos Phantasm - Phantom of Fury",
-      "Holactie the Creator of Light"
+      "Holactie the Creator of Light",
     ];
-  
-    // Nếu là thẻ đặc biệt, trả về giá trị cố định
+
     if (specialCards.includes(name)) {
       return 15000;
     }
-  
-    // Giá trị mặc định nếu không có level
+
     if (!level) {
       return 1500;
     }
-  
-    // Xác định giá trị cơ bản dựa trên level
+
     let baseValue;
     if (level > 9) {
-      baseValue = 3000; // Level greater than 9
+      baseValue = 3000;
     } else if (level > 7) {
-      baseValue = 2000; // Level greater than 7
+      baseValue = 2000;
     } else if (level > 4) {
-      baseValue = 1000; // Level greater than 4
+      baseValue = 1000;
     } else {
-      baseValue = 500; // Remaining cases
+      baseValue = 500;
     }
-  
-    // Tính giá trị atk
-    let atkValue = (atk >= 4000) ? atk * 0.8 : atk * 0.4;
-  
-    // Tính giá trị def
-    let defValue = (def > 4000) ? def * 0.5 : def * 0.2;
-  
-    // Trả về tổng giá trị của thẻ
+
+    let atkValue = atk >= 4000 ? atk * 0.8 : atk * 0.4;
+    let defValue = def > 4000 ? def * 0.5 : def * 0.2;
+
     return baseValue + atkValue + defValue;
   }
 
   const handleDelete = async (card) => {
-    const userEmail = sessionStorage.getItem("userEmail");
-    if (!userEmail) {
+    const userUsername = sessionStorage.getItem("userUsername"); // Sử dụng username
+    if (!userUsername) {
       alert("Bạn cần đăng nhập để xóa thẻ bài khỏi bộ sưu tập.");
       return;
     }
@@ -124,29 +118,33 @@ const Collection = () => {
     try {
       const response = await axios.post(
         "http://localhost:5000/user/remove-from-collection",
+        
         {
           cardName: card.name,
-          email: userEmail,
+          username: userUsername, // Sử dụng username
           atk: card.atk !== undefined ? card.atk : null,
           def: card.def !== undefined ? card.def : null,
           level: card.level !== undefined ? card.level : null,
         }
       );
+      
 
       if (response.status === 200) {
         alert(
           "Thẻ bài đã được xóa khỏi bộ sưu tập! Bạn được hoàn lại 80% giá trị thẻ bài."
         );
 
-        // Cập nhật giá trị coin
-        const coinRecover = calculateCardValue(card.level, card.atk, card.def, card.name);
+        const coinRecover = calculateCardValue(
+          card.level,
+          card.atk,
+          card.def,
+          card.name
+        );
         const currentCoin = parseInt(sessionStorage.getItem("userCoin"), 10);
         const newCoin = currentCoin + coinRecover * 0.8;
         sessionStorage.setItem("userCoin", newCoin);
 
-        // Cập nhật state nếu cần thiết
-        setUserCoin(newCoin); // Giả sử bạn có state để quản lý coin
-
+        setUserCoin(newCoin);
         setCollection((prevCollection) =>
           prevCollection.filter((name) => name !== card.name)
         );

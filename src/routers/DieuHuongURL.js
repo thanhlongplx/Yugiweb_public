@@ -42,7 +42,7 @@ class DieuHuongURL extends Component {
             <Route path="/Collection.html" element={<Collection />} />
             <Route path="/AccountManager.html" element={<AccountManager />} />
             <Route path="/Community.html" element={<Community />} />
-            <Route path="/user/:email" element={<UserDetail />} />
+            <Route path="/user/:username" element={<UserDetail />} />
             <Route path="/DarkAttributeMonsters.html" element={<DarkAttributeMonsters />} />
             <Route path="/CoinManager.html" element={<CoinManager />} />
           </Routes>

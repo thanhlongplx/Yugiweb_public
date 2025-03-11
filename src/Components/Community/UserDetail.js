@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const UserDetail = () => {
-  const { email } = useParams(); // Get the email from URL params
+  const { username } = useParams(); // Lấy username từ URL params
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,7 +12,7 @@ const UserDetail = () => {
   useEffect(() => {
     const fetchUserDetail = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/user/${email}`);
+        const response = await fetch(`http://localhost:5000/user/${username}`); // Gọi API với username
         if (!response.ok) {
           throw new Error("Unable to fetch user details");
         }
@@ -43,7 +43,7 @@ const UserDetail = () => {
 
     fetchUserDetail();
     fetchCards();
-  }, [email]);
+  }, [username]); // Thay đổi dependency từ email sang username
 
   if (loading) {
     return <div>Loading...</div>;
@@ -54,7 +54,7 @@ const UserDetail = () => {
   }
 
   if (!user) {
-    return <div>No user data found.</div>; // Check if user is null
+    return <div>No user data found.</div>; // Kiểm tra nếu user là null
   }
 
   const userCards = user.collection
@@ -64,7 +64,7 @@ const UserDetail = () => {
   return (
     <div className="container mt-5">
       <h2 className="text-center mb-4">{user.name}'s Details</h2>
-      <p>Email: {user.email}</p>
+      <p>Username: {user.name}</p> {/* Thay thế email bằng username */}
       <p>Coins: {user.coin}</p>
       <h5>Collection:</h5>
       <div className="row">
