@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { auth, provider, facebookProvider } from "./firebase"; // Import Firebase
+import { signInWithPopup } from "firebase/auth";
 
 class Register extends Component {
   constructor(props) {
@@ -31,12 +33,75 @@ class Register extends Component {
       headers: { "Content-Type": "application/json" },
     });
     result = await result.json();
-    
+
     if (result.error) {
       this.setState({ error: result.error });
     } else {
       alert("Đăng ký thành công");
-      this.setState({ name: "", email: "", passWord: "", confirmPassword: "", error: "" });
+      this.setState({
+        name: "",
+        email: "",
+        passWord: "",
+        confirmPassword: "",
+        error: "",
+      });
+    }
+  };
+  // handleFacebookSignIn = async () => {
+  //   try {
+  //     const result = await signInWithPopup(auth, facebookProvider);
+  //     const user = result.user;
+
+  //     // Gửi thông tin người dùng đến server để tạo tài khoản
+  //     const response = await fetch("http://localhost:5000/login-google", {
+  //       method: "POST",
+  //       body: JSON.stringify({ email: user.email, name: user.displayName }),
+  //       headers: { "Content-Type": "application/json" },
+  //     });
+
+  //     const data = await response.json();
+  //     if (response.ok) {
+  //       alert("Đăng ký thành công bằng Facebook");
+  //       // Lưu thông tin cần thiết vào sessionStorage
+  //       sessionStorage.setItem("userEmail", data.userEmail);
+  //       sessionStorage.setItem("userCoin", data.userCoin);
+  //       sessionStorage.setItem("userRole", data.userRole);
+  //       this.props.navigate("/"); // Redirect to home
+  //     } else {
+  //       this.setState({ error: data.error });
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during Facebook sign-in:", error);
+  //     this.setState({ error: "Đã xảy ra lỗi khi đăng ký bằng Facebook." });
+  //   }
+  // };
+
+  handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Gửi thông tin người dùng đến server để tạo tài khoản
+      const response = await fetch("http://localhost:5000/login-google", {
+        method: "POST",
+        body: JSON.stringify({ email: user.email, name: user.displayName }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert("Đăng nhập thành công bằng Google");
+        // Lưu thông tin cần thiết vào sessionStorage
+        sessionStorage.setItem("userEmail", data.userEmail);
+        sessionStorage.setItem("userCoin", data.userCoin);
+        sessionStorage.setItem("userRole", data.userRole);
+        this.props.navigate("/"); // Redirect to home
+      } else {
+        this.setState({ error: data.error });
+      }
+    } catch (error) {
+      console.error("Error during Google sign-in:", error);
+      this.setState({ error: "Đã xảy ra lỗi khi đăng ký bằng Google." });
     }
   };
 
@@ -49,60 +114,96 @@ class Register extends Component {
 
     return (
       <div className="container mt-5">
-        <h1 className="text-center mb-4">Đăng Ký Tài Khoản</h1>
+        <h1 className="text-center mb-4">Register</h1>
         {error && <div className="alert alert-danger">{error}</div>}
 
-        <form onSubmit={this.handleOnSubmit} className="p-4 border rounded shadow">
+        <form
+          onSubmit={this.handleOnSubmit}
+          className="p-4 border rounded shadow w-50 me-auto ms-auto"
+        >
           <div className="form-group mb-3">
-            <label htmlFor="name" className="font-weight-bold">Tên</label>
+            <label htmlFor="name" className="font-weight-bold">
+              Name
+            </label>
             <input
               type="text"
               name="name"
               className="form-control"
-              placeholder="Nhập tên của bạn"
+              placeholder="Type your name"
               value={name}
               onChange={this.handleChange}
               required
             />
           </div>
           <div className="form-group mb-3">
-            <label htmlFor="email" className="font-weight-bold">Email</label>
+            <label htmlFor="email" className="font-weight-bold">
+              Email
+            </label>
             <input
               type="email"
               name="email"
               className="form-control"
-              placeholder="Nhập email của bạn"
+              placeholder="Type your email"
               value={email}
               onChange={this.handleChange}
               required
             />
           </div>
           <div className="form-group mb-3">
-            <label htmlFor="passWord" className="font-weight-bold">Mật khẩu</label>
+            <label htmlFor="passWord" className="font-weight-bold">
+              Password
+            </label>
             <input
               type="password"
               name="passWord"
               className="form-control"
-              placeholder="Nhập mật khẩu"
+              placeholder="Type your password"
               value={passWord}
               onChange={this.handleChange}
               required
             />
           </div>
           <div className="form-group mb-4">
-            <label htmlFor="confirmPassword" className="font-weight-bold">Xác nhận Mật khẩu</label>
+            <label htmlFor="confirmPassword" className="font-weight-bold">
+              Confirm Password
+            </label>
             <input
               type="password"
               name="confirmPassword"
               className="form-control"
-              placeholder="Xác nhận mật khẩu"
+              placeholder="Type your password again"
               value={confirmPassword}
               onChange={this.handleChange}
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary btn-block">Đăng Ký</button>
+          <button
+            type="submit"
+            className="btn btn-danger btn-block me-auto ms-auto"
+          >
+            Register
+            <i className="fas fa-arrow-right" style={{ marginLeft: "8px" }}></i>
+          </button>
+
+          <NavLink
+            className="text-primary text-center btn-block me-auto ms-auto"
+            to="/LoginForm.html"
+          >
+            Login
+          </NavLink>
         </form>
+
+        <button
+          onClick={this.handleGoogleSignIn}
+          className="btn btn-white text-black border-primary btn-block mt-3 w-25 me-auto ms-auto"
+        >
+          <img
+            src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA"
+            alt="Google Logo"
+            style={{ width: "20px", marginRight: "8px" }}
+          />
+          Login With Google
+        </button>
       </div>
     );
   }

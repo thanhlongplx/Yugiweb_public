@@ -1,0 +1,14 @@
+.editCard {
+  width: 50%;
+  position: fixed;
+  top: 50%;
+  left: 30%;
+  transform: translate(-50%, -50%);
+  /*  */
+  background-color: black;
+  border-radius: 20px;
+}
+.cardNameItem:hover {
+  background-color: greenyellow;
+}
+

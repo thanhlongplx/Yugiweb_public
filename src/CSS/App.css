@@ -76,3 +76,22 @@
   color: #ffd700; /* Màu vàng nhạt */
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Hiệu ứng đổ bóng */
 }
+
+@keyframes move {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-40px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.shadow {
+  margin-top: 50px;
+  padding: 50px;
+  animation: infinite 10s move;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15); /* Hiệu ứng bóng */
+}

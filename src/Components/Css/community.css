@@ -1,0 +1,14 @@
+.community-card {
+    background-color: #1e1e1e; /* Màu nền tối */
+    color: #ffffff; /* Màu chữ trắng */
+    border: 2px solid #f39c12; /* Đường viền vàng */
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.2s; /* Hiệu ứng hover */
+  }
+  
+  .community-card:hover {
+    transform: scale(1.05); /* Phóng to khi hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Đổ bóng */
+  }

@@ -19,6 +19,7 @@ class Detail extends Component {
         fetch("https://db.ygoprodeck.com/api/v7/cardinfo.php?archetype=Blue-Eyes"),
         fetch("https://db.ygoprodeck.com/api/v7/cardinfo.php?level=4&attribute=water&sort=atk"),
         fetch("https://db.ygoprodeck.com/api/v7/cardinfo.php?cardset=metal%20raiders&attribute=dark"),
+        fetch("https://db.ygoprodeck.com/api/v7/cardinfo.php"),
       ]);
 
       const data = await Promise.all(responses.map(res => res.json()));
@@ -26,8 +27,9 @@ class Detail extends Component {
       const cardFromAPI1 = data[0].data.find(item => item.id === id);
       const cardFromAPI2 = data[1].data.find(item => item.id === id);
       const cardFromAPI3 = data[2].data.find(item => item.id === id);
+      const cardFromAPI4 = data[3].data.find(item => item.id === id);
 
-      const card = cardFromAPI1 || cardFromAPI2 || cardFromAPI3;
+      const card = cardFromAPI1 || cardFromAPI2 || cardFromAPI3 || cardFromAPI4;
       if (!card) throw new Error("Card not found");
 
       this.setState({ newsItem: card, loading: false });
@@ -36,6 +38,7 @@ class Detail extends Component {
         ...data[0].data.filter(item => item.archetype === card.archetype && item.id !== card.id),
         ...data[1].data.filter(item => item.attribute === "WATER" && item.id !== card.id),
         ...data[2].data.filter(item => item.attribute === "DARK" && item.id !== card.id),
+        ...data[3].data.filter(item => item.attribute === "All" && item.id !== card.id),
       ];
       this.setState({ relatedItems });
     } catch (error) {
@@ -57,23 +60,52 @@ class Detail extends Component {
     }
   };
 
-  calculateCardValue(level, atk, def) {
-    if (level) {
-      let baseValue;
-      if (level > 7) {
-        baseValue = 2000; // Level lớn hơn 7
-      } else if (level > 4) {
-        baseValue = 1000; // Level lớn hơn 4
-      } else {
-        baseValue = 500; // Các trường hợp còn lại
-      }
+  calculateCardValue(level, atk, def, name) {
+    // Kiểm tra nếu tên là một trong những thẻ đặc biệt
+    const specialCards = [
+      "Slifer the Sky Dragon",
+      "Obelisk the Tormentor",
+      "The Winged Dragon of Ra",
+      "The Winged Dragon of Ra - Immortal Phoenix",
+      "Raviel, Lord of Phantasms",
+      "Raviel, Lord of Phantasms - Shimmering Scraper",
+      "Uria, Lord of Searing Flames",
+      "Hamon, Lord of Striking Thunder",
+      "Armityle the Chaos Phantasm",
+      "Armityle the Chaos Phantasm - Phantom of Fury",
+      "Holactie the Creator of Light"
+    ];
   
-      const atkValue = atk * 0.5;
-      const defValue = def * 0.3;
-      
-      return baseValue + atkValue + defValue;
+    // Nếu là thẻ đặc biệt, trả về giá trị cố định
+    if (specialCards.includes(name)) {
+      return 15000;
     }
-    return 1500; // Nếu không có level
+  
+    // Giá trị mặc định nếu không có level
+    if (!level) {
+      return 1500;
+    }
+  
+    // Xác định giá trị cơ bản dựa trên level
+    let baseValue;
+    if (level > 9) {
+      baseValue = 3000; // Level greater than 9
+    } else if (level > 7) {
+      baseValue = 2000; // Level greater than 7
+    } else if (level > 4) {
+      baseValue = 1000; // Level greater than 4
+    } else {
+      baseValue = 500; // Remaining cases
+    }
+  
+    // Tính giá trị atk
+    let atkValue = (atk >= 4000) ? atk * 0.8 : atk * 0.4;
+  
+    // Tính giá trị def
+    let defValue = (def > 4000) ? def * 0.5 : def * 0.2;
+  
+    // Trả về tổng giá trị của thẻ
+    return baseValue + atkValue + defValue;
   }
 
   // Cập nhật hàm addToCollection
@@ -87,7 +119,7 @@ addToCollection = async () => {
     return;
   }
 
-  const cardValue = this.calculateCardValue(newsItem.level, newsItem.atk, newsItem.def);
+  const cardValue = this.calculateCardValue(newsItem.level, newsItem.atk, newsItem.def, newsItem.name);
   
   if (userCoin < cardValue) {
     toast.error("Không có đủ YugiCoin cho hành động này!!!!");
@@ -175,7 +207,7 @@ addToCollection = async () => {
               <p className="text-white">ATK: {newsItem.atk} DEF: {newsItem.def}</p>
               <button
   onClick={() => {
-    const cardValue = this.calculateCardValue(newsItem.level, newsItem.atk, newsItem.def);
+    const cardValue = this.calculateCardValue(newsItem.level, newsItem.atk, newsItem.def, newsItem.name);
     const confirmMessage = `Bạn có chắc chắn muốn thêm thẻ bài này vào bộ sưu tập? Giá: ${cardValue} YugiCoin.`;
     
     if (window.confirm(confirmMessage)) {
@@ -185,8 +217,8 @@ addToCollection = async () => {
   className="AddColbtn"
 >
   <div className="d-flex">
-    <h2 className="mb-0 me-2">Price: {this.calculateCardValue(newsItem.level, newsItem.atk, newsItem.def)}</h2>
-    <img width="50" src="/YugiCoin.png" alt="YugiCoin Logo" className="me-2" />
+    <h2 className="mb-0 me-2">Price: {this.calculateCardValue(newsItem.level, newsItem.atk, newsItem.def, newsItem.name)}</h2>
+    <img width="50" src="/YugiCoin2.png" alt="YugiCoin Logo" className="me-2" />
   </div>
 </button>
             </div>
@@ -196,7 +228,7 @@ addToCollection = async () => {
             {relatedItems.length > 0 ? (
               <div className="row">
                 {relatedItems.map((item) => (
-                  <div key={item.id} className="col col-lg-2" style={{ height: "150px" }}>
+                  <div key={item.id} className="col-6 col-lg-2 col-md-4 " style={{ height: "150px" }}>
                     <div className="card">
                       <Link to={`/chi-tiet/${Detail.chuyenDoi(item.name)}/${item.id}.html`}>
                         <img src={item.card_images[0].image_url} className="img-fluid" alt={item.name} />

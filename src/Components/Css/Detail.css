@@ -45,22 +45,6 @@
   border-radius: 5px;
   text-align: center;
 }
-.card {
-  position: relative;
-}
 
-.card:hover .delete-btn {
-  display: block; /* Hiển thị nút khi hover */
-}
 
-.delete-btn {
-  display: none; /* Ẩn nút mặc định */
-  background-color: red; /* Nền đỏ cho nút xóa */
-  position: relative;
-  opacity: 50%;
-  height: 10%;
-  border-radius: 50px;
-  color: white;
-  border: solid black;
-  cursor: pointer;
-}
+

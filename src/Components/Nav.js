@@ -6,43 +6,43 @@ class Nav extends Component {
     super(props);
     this.state = {
       username: sessionStorage.getItem("userEmail") || "User",
-      userCoin: sessionStorage.getItem("userCoin") || "YC",
+      userCoin: sessionStorage.getItem("userCoin") || "0",
+      userRole: sessionStorage.getItem("userRole") || "customer",
     };
   }
 
   componentDidMount() {
-    // Cập nhật username và userCoin khi component mount
-    this.updateUsername();
-    this.updateUserCoin();
-
-    // Kiểm tra thường xuyên
+    this.updateUserInfo();
     this.interval = setInterval(() => {
-      this.updateUsername();
-      this.updateUserCoin();
+      this.updateUserInfo();
     }, 1000);
   }
 
   componentWillUnmount() {
-    // Dọn dẹp interval khi component bị hủy
     clearInterval(this.interval);
   }
 
-  updateUsername = () => {
+  updateUserInfo = () => {
     const email = sessionStorage.getItem("userEmail");
-    if (email !== this.state.username) {
-      this.setState({ username: email || "User" });
-    }
+    let coin = parseFloat(sessionStorage.getItem("userCoin")) || 0;
+    coin = Math.round(coin * 100) / 100;
+
+    this.setState({
+      username: email || "User",
+      userCoin: coin,
+      userRole: sessionStorage.getItem("userRole") || "customer",
+    });
   };
 
-  updateUserCoin = () => {
-    const coin = sessionStorage.getItem("userCoin");
-    if (coin !== this.state.userCoin) {
-      this.setState({ userCoin: coin || "" });
-    }
-  };
+  formatNumber(num) {
+    const roundedNum = (Math.round(num * 1000) / 1000).toFixed(1);
+    const [integerPart, decimalPart] = roundedNum.split(".");
+    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return `${formattedInteger},${decimalPart}`;
+  }
 
   render() {
-    const { username, userCoin } = this.state;
+    const { username, userCoin, userRole } = this.state;
 
     return (
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -50,7 +50,7 @@ class Nav extends Component {
           <NavLink className="navbar-brand" to="/">
             <img
               width="120"
-              src="/YugiCoin.png"
+              src="/YugiCoin2.png"
               alt="YugiCoin Logo"
               className="me-2"
             />
@@ -85,17 +85,30 @@ class Nav extends Component {
                   Contact
                 </NavLink>
               </li>
+              {userRole === "admin" && (
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/Admin.html">
+                    Admin
+                  </NavLink>
+                </li>
+              )}
+              {userRole === "customer" && (
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/Community.html">
+                    Community
+                  </NavLink>
+                </li>
+              )}
               <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
+                <button
+                  className="nav-link dropdown-toggle btn btn-link"
                   id="navbarDropdown"
                   role="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
                   {username}
-                </a>
+                </button>
                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li>
                     <NavLink className="dropdown-item" to="/RegisterForm.html">
@@ -108,9 +121,11 @@ class Nav extends Component {
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink className="dropdown-item" to="/LogoutForm.html">
-                      Logout
-                    </NavLink>
+                    {!!sessionStorage.getItem("userRole") && (
+                      <NavLink className="dropdown-item" to="/LogoutForm.html">
+                        Logout
+                      </NavLink>
+                    )}
                   </li>
                 </ul>
               </li>
@@ -123,9 +138,12 @@ class Nav extends Component {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Categories
+                  Buy cards
                 </NavLink>
-                <ul className="dropdown-menu" aria-labelledby="navbarDropdownCategories">
+                <ul
+                  className="dropdown-menu"
+                  aria-labelledby="navbarDropdownCategories"
+                >
                   <li>
                     <NavLink className="dropdown-item" to="/WaterCards.html">
                       Water
@@ -137,8 +155,16 @@ class Nav extends Component {
                     </NavLink>
                   </li>
                   <li>
-                    <NavLink className="dropdown-item" to="/DarkAttributeMonsters.html">
+                    <NavLink
+                      className="dropdown-item"
+                      to="/DarkAttributeMonsters.html"
+                    >
                       Dark Attribute Monsters
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink className="dropdown-item" to="/AllCards.html">
+                      All Cards
                     </NavLink>
                   </li>
                 </ul>
@@ -146,12 +172,12 @@ class Nav extends Component {
               <li className="list-group-item d-flex justify-content-between align-items-center text-white bg-dark">
                 <div className="d-flex align-items-center">
                   <img
-                    src="/YugiCoin.png"
+                    src="/YugiCoin2.png"
                     alt="YugiCoin"
                     style={{ width: "30px", marginLeft: "0px" }}
                   />
                 </div>
-                <span>: {userCoin} YC</span>
+                <span>: {this.formatNumber(userCoin)} YC</span>
               </li>
             </ul>
           </div>
