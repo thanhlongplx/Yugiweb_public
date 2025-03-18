@@ -36,7 +36,7 @@ const CoinManager = () => {
   const handleUpdateCoin = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/user/update-coin/${editingUser.email}`,
+        `http://localhost:5000/user/update-coin/${editingUser.username}`,
         {
           method: "PUT",
           headers: {
@@ -58,8 +58,6 @@ const CoinManager = () => {
           user.email === updatedUser.email ? updatedUser : user
         )
       );
-
-     
 
       setEditingUser(null);
       setNewCoinAmount("");

@@ -16,18 +16,24 @@ class Detail extends Component {
   fetchCardDetails = async (id) => {
     try {
       const responses = await Promise.all([
-        fetch("https://db.ygoprodeck.com/api/v7/cardinfo.php?archetype=Blue-Eyes"),
-        fetch("https://db.ygoprodeck.com/api/v7/cardinfo.php?level=4&attribute=water&sort=atk"),
-        fetch("https://db.ygoprodeck.com/api/v7/cardinfo.php?cardset=metal%20raiders&attribute=dark"),
+        fetch(
+          "https://db.ygoprodeck.com/api/v7/cardinfo.php?archetype=Blue-Eyes"
+        ),
+        fetch(
+          "https://db.ygoprodeck.com/api/v7/cardinfo.php?level=4&attribute=water&sort=atk"
+        ),
+        fetch(
+          "https://db.ygoprodeck.com/api/v7/cardinfo.php?cardset=metal%20raiders&attribute=dark"
+        ),
         fetch("https://db.ygoprodeck.com/api/v7/cardinfo.php"),
       ]);
 
-      const data = await Promise.all(responses.map(res => res.json()));
-      
-      const cardFromAPI1 = data[0].data.find(item => item.id === id);
-      const cardFromAPI2 = data[1].data.find(item => item.id === id);
-      const cardFromAPI3 = data[2].data.find(item => item.id === id);
-      const cardFromAPI4 = data[3].data.find(item => item.id === id);
+      const data = await Promise.all(responses.map((res) => res.json()));
+
+      const cardFromAPI1 = data[0].data.find((item) => item.id === id);
+      const cardFromAPI2 = data[1].data.find((item) => item.id === id);
+      const cardFromAPI3 = data[2].data.find((item) => item.id === id);
+      const cardFromAPI4 = data[3].data.find((item) => item.id === id);
 
       const card = cardFromAPI1 || cardFromAPI2 || cardFromAPI3 || cardFromAPI4;
       if (!card) throw new Error("Card not found");
@@ -35,10 +41,18 @@ class Detail extends Component {
       this.setState({ newsItem: card, loading: false });
 
       const relatedItems = [
-        ...data[0].data.filter(item => item.archetype === card.archetype && item.id !== card.id),
-        ...data[1].data.filter(item => item.attribute === "WATER" && item.id !== card.id),
-        ...data[2].data.filter(item => item.attribute === "DARK" && item.id !== card.id),
-        ...data[3].data.filter(item => item.attribute === "All" && item.id !== card.id),
+        ...data[0].data.filter(
+          (item) => item.archetype === card.archetype && item.id !== card.id
+        ),
+        ...data[1].data.filter(
+          (item) => item.attribute === "WATER" && item.id !== card.id
+        ),
+        ...data[2].data.filter(
+          (item) => item.attribute === "DARK" && item.id !== card.id
+        ),
+        ...data[3].data.filter(
+          (item) => item.attribute === "All" && item.id !== card.id
+        ),
       ];
       this.setState({ relatedItems });
     } catch (error) {
@@ -73,19 +87,19 @@ class Detail extends Component {
       "Hamon, Lord of Striking Thunder",
       "Armityle the Chaos Phantasm",
       "Armityle the Chaos Phantasm - Phantom of Fury",
-      "Holactie the Creator of Light"
+      "Holactie the Creator of Light",
     ];
-  
+
     // Nếu là thẻ đặc biệt, trả về giá trị cố định
     if (specialCards.includes(name)) {
       return 15000;
     }
-  
+
     // Giá trị mặc định nếu không có level
     if (!level) {
       return 1500;
     }
-  
+
     // Xác định giá trị cơ bản dựa trên level
     let baseValue;
     if (level > 9) {
@@ -97,80 +111,92 @@ class Detail extends Component {
     } else {
       baseValue = 500; // Remaining cases
     }
-  
+
     // Tính giá trị atk
-    let atkValue = (atk >= 4000) ? atk * 0.8 : atk * 0.4;
-  
+    let atkValue = atk >= 4000 ? atk * 0.8 : atk * 0.4;
+
     // Tính giá trị def
-    let defValue = (def > 4000) ? def * 0.5 : def * 0.2;
-  
+    let defValue = def > 4000 ? def * 0.5 : def * 0.2;
+
     // Trả về tổng giá trị của thẻ
     return baseValue + atkValue + defValue;
   }
 
   // Cập nhật hàm addToCollection
-addToCollection = async () => {
-  const { newsItem, collection } = this.state;
-  // const userEmail = sessionStorage.getItem("userEmail");
-  const userName = sessionStorage.getItem("userUsername");
-  const userCoin = parseInt(sessionStorage.getItem("userCoin"), 10);
+  addToCollection = async () => {
+    const { newsItem, collection } = this.state;
+    // const userEmail = sessionStorage.getItem("userEmail");
+    const userName = sessionStorage.getItem("userUsername");
+    const userCoin = parseInt(sessionStorage.getItem("userCoin"), 10);
 
-  if (!userName) {
-    toast.error("Bạn cần đăng nhập để thêm thẻ bài vào bộ sưu tập.");
-    return;
-  }
-
-  const cardValue = this.calculateCardValue(newsItem.level, newsItem.atk, newsItem.def, newsItem.name);
-  
-  if (userCoin < cardValue) {
-    toast.error("Không có đủ YugiCoin cho hành động này!!!!");
-    return;
-  }
-
-  if (collection.includes(newsItem.name)) {
-    toast.error("Thẻ bài đã tồn tại trong bộ sưu tập.");
-    return;
-  }
-
-  if (!newsItem || !newsItem.name) {
-    toast.error("Thẻ bài này chưa đủ điều kiện để thêm vào bộ sưu tập!!!!");
-    return;
-  }
-
-  try {
-    const response = await fetch("http://localhost:5000/user/add-to-collection", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        cardName: newsItem.name,
-        username: userName,
-        level: newsItem.level,
-        atk: newsItem.atk,
-        def: newsItem.def,
-      }),
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      toast.info("Thẻ bài đã được thêm vào bộ sưu tập!");
-      
-      // Cập nhật state với số coin mới
-      this.setState(prevState => ({
-        userCoin: data.userCoin, // Cập nhật coin từ phản hồi
-        collection: [...prevState.collection, newsItem.name],
-      }));
-      
-      // Cập nhật sessionStorage nếu cần
-      sessionStorage.setItem("userCoin", data.userCoin);
-    } else {
-      const errorData = await response.json();
-      toast.error(`Lỗi: ${errorData.error}`);
+    if (!userName) {
+      toast.error("You need to log in to add a card to your collection.");
+      return;
     }
-  } catch (error) {
-    console.error("Error adding to collection:", error);
-    toast.error("Đã xảy ra lỗi khi thêm thẻ bài vào bộ sưu tập.");
-  }
-};
+
+    const cardValue = this.calculateCardValue(
+      newsItem.level,
+      newsItem.atk,
+      newsItem.def,
+      newsItem.name
+    );
+
+    if (userCoin < cardValue) {
+      toast.error(
+        "You don't have enough coins to add this card to your collection."
+      );
+      return;
+    }
+
+    if (collection.includes(newsItem.name)) {
+      toast.error("This card is already in your collection.");
+      return;
+    }
+
+    if (!newsItem || !newsItem.name) {
+      toast.error("Card data is invalid.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "http://localhost:5000/user/add-to-collection",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            cardName: newsItem.name,
+            username: userName,
+            level: newsItem.level,
+            atk: newsItem.atk,
+            def: newsItem.def,
+          }),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        toast.success("Card added to collection successfully!");
+
+        // Cập nhật state với số coin mới
+        this.setState((prevState) => ({
+          userCoin: data.userCoin, // Cập nhật coin từ phản hồi
+          collection: [...prevState.collection, newsItem.name],
+        }));
+
+        // Cập nhật sessionStorage nếu cần
+        sessionStorage.setItem("userCoin", data.userCoin);
+      } else {
+        const errorData = await response.json();
+        toast.error(`${errorData.error}`);
+      }
+    } catch (error) {
+      console.error("Error adding to collection:", error);
+      toast.error(
+        "An error occurred while adding the card to your collection."
+      );
+    }
+  };
 
   componentDidMount() {
     this.fetchCardDetails(this.props.id);
@@ -201,27 +227,69 @@ addToCollection = async () => {
         <ToastContainer /> {/* Thêm ToastContainer vào render */}
         <main className="flex-shrink-0">
           <div className="container my-4">
-            <div className="text-center" style={{ border: "33px solid black", padding: "20px", borderRadius: "5px", backgroundImage: "url('https://cdn.xtmobile.vn/vnt_upload/news/04_2024/26/hinh-nen-mac-dinh-iphone-16-pro-1.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
+            <div
+              className="text-center"
+              style={{
+                border: "33px solid black",
+                padding: "20px",
+                borderRadius: "5px",
+                backgroundImage:
+                  "url('https://cdn.xtmobile.vn/vnt_upload/news/04_2024/26/hinh-nen-mac-dinh-iphone-16-pro-1.jpg')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
               <h2 className="text-white">{newsItem.name}</h2>
-              <img src={newsItem.card_images[0].image_url} className="img-fluid rounded shadow mb-4" style={{ width: "50%" }} alt={newsItem.name} />
-              <p className="text-white font-weight-bold" style={{ fontSize: "1.25em" }}>{newsItem.desc}</p>
-              <p className="text-white">ATK: {newsItem.atk} DEF: {newsItem.def}</p>
+              <img
+                src={newsItem.card_images[0].image_url}
+                className="img-fluid mb-4"
+                style={{ width: "50%" }}
+                alt={newsItem.name}
+              />
+              <p
+                className="text-white font-weight-bold"
+                style={{ fontSize: "1.25em" }}
+              >
+                {newsItem.desc}
+              </p>
+              <p className="text-white">
+                ATK: {newsItem.atk} DEF: {newsItem.def}
+              </p>
               <button
-  onClick={() => {
-    const cardValue = this.calculateCardValue(newsItem.level, newsItem.atk, newsItem.def, newsItem.name);
-    const confirmMessage = `Bạn có chắc chắn muốn thêm thẻ bài này vào bộ sưu tập? Giá: ${cardValue} YugiCoin.`;
-    
-    if (window.confirm(confirmMessage)) {
-      this.addToCollection();
-    }
-  }}
-  className="AddColbtn"
->
-  <div className="d-flex">
-    <h2 className="mb-0 me-2">Price: {this.calculateCardValue(newsItem.level, newsItem.atk, newsItem.def, newsItem.name)}</h2>
-    <img width="50" src="/YugiCoin2.png" alt="YugiCoin Logo" className="me-2" />
-  </div>
-</button>
+                onClick={() => {
+                  const cardValue = this.calculateCardValue(
+                    newsItem.level,
+                    newsItem.atk,
+                    newsItem.def,
+                    newsItem.name
+                  );
+
+                  const confirmMessage = `Bạn có chắc chắn muốn thêm thẻ bài này vào bộ sưu tập? Giá: ${cardValue} YugiCoin.`;
+
+                  if (window.confirm(confirmMessage)) {
+                    this.addToCollection();
+                  }
+                }}
+                className="AddColbtn"
+              >
+                <div className="d-flex">
+                  <h2 className="mb-0 me-2">
+                    Price:{" "}
+                    {this.calculateCardValue(
+                      newsItem.level,
+                      newsItem.atk,
+                      newsItem.def,
+                      newsItem.name
+                    )}
+                  </h2>
+                  <img
+                    width="50"
+                    src="/YugiCoin2.png"
+                    alt="YugiCoin Logo"
+                    className="me-2"
+                  />
+                </div>
+              </button>
             </div>
           </div>
           <div className="container">
@@ -229,10 +297,22 @@ addToCollection = async () => {
             {relatedItems.length > 0 ? (
               <div className="row">
                 {relatedItems.map((item) => (
-                  <div key={item.id} className="col-6 col-lg-2 col-md-4 " style={{ height: "150px" }}>
-                    <div className="card">
-                      <Link to={`/chi-tiet/${Detail.chuyenDoi(item.name)}/${item.id}.html`}>
-                        <img src={item.card_images[0].image_url} className="img-fluid" alt={item.name} />
+                  <div
+                    key={item.id}
+                    className=" col-6 col-lg-2 col-md-4 "
+                    style={{ height: "150px" }}
+                  >
+                    <div className="cardItem ">
+                      <Link
+                        to={`/chi-tiet/${Detail.chuyenDoi(item.name)}/${
+                          item.id
+                        }.html`}
+                      >
+                        <img
+                          src={item.card_images[0].image_url}
+                          className="img-fluid"
+                          alt={item.name}
+                        />
                       </Link>
                     </div>
                   </div>
@@ -248,7 +328,8 @@ addToCollection = async () => {
   }
 
   static chuyenDoi(str) {
-    return str.toLowerCase()
+    return str
+      .toLowerCase()
       .replace(/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/g, "a")
       .replace(/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/g, "e")
       .replace(/(ì|í|ị|ỉ|ĩ)/g, "i")

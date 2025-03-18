@@ -27,6 +27,13 @@ const Community = () => {
     fetchUsers();
   }, []);
 
+  const formatNumber = (num) => {
+    const roundedNum = (Math.round(num * 1000) / 1000).toFixed(1);
+    const [integerPart, decimalPart] = roundedNum.split(".");
+    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return `${formattedInteger},${decimalPart}`;
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -36,20 +43,20 @@ const Community = () => {
   }
 
   return (
-    <div className="container mt-5">
+    <div className="container mb-5">
+      
       <h2 className="mb-4 text-center">Cộng Đồng Người Dùng</h2>
       <div className="row">
         {users.map((user) => (
           <div className="col-md-4 mb-4" key={user.email}>
             <div className="community-card">
-              <h5>
-                <Link to={`/user/${user.username}`} className="text-light">
-                  {user.name}
-                </Link>
-              </h5>
+              <h5>{user.name}</h5>
               <p>Email: {user.email}</p>
-              <p>Số Coin: {user.coin}</p>
+              <p>Số Coin: {formatNumber(user.coin)}</p> {/* Sử dụng hàm formatNumber */}
               <p>Số lượng thẻ: {user.collection.length}</p>
+              <Link to={`/user/${user.username}`} className="text-light">
+                Thông tin thẻ
+              </Link>
             </div>
           </div>
         ))}

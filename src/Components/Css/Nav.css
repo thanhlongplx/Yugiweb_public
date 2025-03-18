@@ -7,35 +7,35 @@
   /* Màu chữ khi đang hoạt động */
 }
 
-.card {
+.cardItem {
   position: relative; /* Thiết lập vị trí tương đối */
   overflow: hidden; /* Đảm bảo rằng hiệu ứng không tràn ra ngoài */
   transition: box-shadow 0.3s ease; /* Hiệu ứng chuyển đổi cho bóng đổ */
 }
 
 /* Không hover */
-.card {
+.cardItem {
   box-shadow: none; /* Không có bóng đổ */
 }
 
 /* Hover */
-.card:hover {
+.cardItem:hover {
   box-shadow: 0 0 20px 10px rgba(255, 255, 0, 0.7); /* Hiệu ứng hào quang màu vàng kim */
   filter: brightness(1.3); /* Tăng độ sáng lên 1.3 lần */
 }
 
-.card-body {
+.cardItem-body {
   display: none;
 }
-.card:hover {
-  transform: translateY(-120px);
+.cardItem:hover {
+  transform: translateY(-10px);
   transition: transform 0.3s ease, filter 0.3s ease; /* Thay đổi hiệu ứng cho hình ảnh */
 }
-.card:not(:hover) {
+.cardItem:not(:hover) {
   transform: translateY(0px);
   transition: transform 0.3s ease, filter 0.3s ease; /* Thay đổi hiệu ứng cho hình ảnh */
 }
-.card:hover .card-body {
+.cardItem:hover .card-body {
   display: block;
 }
 Footer {

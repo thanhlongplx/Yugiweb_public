@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Nav from "./Css/Nav.css";
 import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
+import "animate.css";
 
 class Header extends Component {
   render() {
@@ -21,13 +22,13 @@ class Header extends Component {
                 </p>
                 <div className="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
                   <Link
-                    className="btn btn-warning btn-lg px-4 me-sm-3"
+                    className="animate__animated animate__lightSpeedInLeft btn btn-warning btn-lg px-4 me-sm-3"
                     to="/BlueEyes.html"
                   >
                     Start your journey
                   </Link>
                   <Link
-                    className="btn btn-outline-dark text-white btn-lg px-4"
+                    className="animate__animated animate__fadeInRightBig btn btn-outline-dark text-white btn-lg px-4"
                     to="/Contact.html"
                   >
                     Contact Us

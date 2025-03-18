@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { NavLink, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import CSS
+import { auth, provider } from "./firebase"; // Import Firebase
+import { signInWithPopup } from "firebase/auth";
 
 class Register extends Component {
   constructor(props) {
@@ -13,6 +17,37 @@ class Register extends Component {
       error: "",
     };
   }
+  handleLoginWithGoogle = async () => {
+    this.setState({ loading: true, error: "" });
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      const response = await fetch("http://localhost:5000/login-google", {
+        method: "POST",
+        body: JSON.stringify({ email: user.email, name: user.displayName }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Login failed");
+      }
+
+      const data = await response.json();
+      toast.info("Login with Google successfully");
+      sessionStorage.setItem("userUsername", data.userUsername);
+      sessionStorage.setItem("userCoin", data.userCoin);
+      sessionStorage.setItem("userRole", data.userRole);
+      this.props.navigate("/"); // Redirect to home
+    } catch (error) {
+      console.error("Error during Google login:", error);
+      this.setState({ error: error.message });
+    } finally {
+      this.setState({ loading: false });
+    }
+  };
 
   handleOnSubmit = async (e) => {
     e.preventDefault();
@@ -133,6 +168,18 @@ class Register extends Component {
             Login
           </NavLink>
         </form>
+        <button
+          onClick={this.handleLoginWithGoogle}
+          className="btn btn-light border-primary btn-block mt-3 w-50 me-auto ms-auto "
+          style={{ marginBottom: "100px" }}
+        >
+          <img
+            src="https://lh3.googleusercontent.com/COxitqgJr1sJnIDe8-jiKhxDx1FrYbtRHKJ9z_hELisAlapwE9LUPh6fcXIfb5vwpbMl4xl9H9TRFPc5NOO8Sb3VSgIBrfRYvW6cUA"
+            alt="Google Logo"
+            style={{ width: "20px", marginRight: "8px" }}
+          />
+          Login with Google
+        </button>
       </div>
     );
   }

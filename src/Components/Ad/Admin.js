@@ -25,6 +25,11 @@ const Admin = () => {
               Account Manager
             </Link>
           </div>
+          <div className="mb-3 m-1">
+            <Link to="/FeedbackList.html" className="btn btn-primary me-2">
+            FeedbackList
+            </Link>
+          </div>
         </div>
       </div>
 

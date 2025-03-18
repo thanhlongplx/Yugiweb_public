@@ -51,7 +51,7 @@ const WaterCards = () => {
   return (
     <div>
       {/* Header Section */}
-     
+
       <div className="container py-5">
         {/* Tìm kiếm */}
         <div className="mb-4">
@@ -96,7 +96,10 @@ const WaterCards = () => {
         {/* Nút Xem thêm */}
       </div>
       {visibleCount < filteredCards.length && (
-        <div className="text-center mt-5">
+        <div
+          className="text-center"
+          style={{ position: "fixed", right: "20px", bottom: "10%" }}
+        >
           <button className="btn btn-primary" onClick={handleLoadMore}>
             Xem thêm
           </button>

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
+import "animate.css";
 
 class Nav extends Component {
   constructor(props) {
@@ -52,7 +53,7 @@ class Nav extends Component {
               width="120"
               src="/YugiCoin2.png"
               alt="YugiCoin Logo"
-              className="me-2"
+              className="animate__animated animate__flip me-2"
             />
           </NavLink>
 
@@ -70,25 +71,39 @@ class Nav extends Component {
 
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/Collection.html">
-                  My collection
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/MiniGame.html">
-                  MiniGame
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/Contact.html">
-                  Contact
-                </NavLink>
-              </li>
+              {userRole === "customer" && (
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/Collection.html">
+                    My collection
+                  </NavLink>
+                </li>
+              )}
               {userRole === "admin" && (
                 <li className="nav-item">
-                  <NavLink className="nav-link" to="/Admin.html">
-                    Admin
+                  <NavLink className="nav-link" to="/CoinManager.html">
+                    Coin Manager
+                  </NavLink>
+                </li>
+              )}
+              {userRole === "admin" && (
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/FeedbackList.html">
+                    Feedback List
+                  </NavLink>
+                </li>
+              )}
+
+              {userRole === "customer" && (
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/MiniGame.html">
+                    MiniGame
+                  </NavLink>
+                </li>
+              )}
+              {userRole === "customer" && (
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/FriendList.html">
+                    Friends
                   </NavLink>
                 </li>
               )}
@@ -99,6 +114,23 @@ class Nav extends Component {
                   </NavLink>
                 </li>
               )}
+              {userRole === "customer" && (
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/Contact.html">
+                    Contact
+                  </NavLink>
+                </li>
+              )}
+
+              {/* Admin-specific link */}
+              {userRole === "admin" && (
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/AccountManager.html">
+                    Account Manager
+                  </NavLink>
+                </li>
+              )}
+
               <li className="nav-item dropdown">
                 <button
                   className="nav-link dropdown-toggle btn btn-link"
@@ -111,14 +143,21 @@ class Nav extends Component {
                 </button>
                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li>
-                    <NavLink className="dropdown-item" to="/RegisterForm.html">
-                      Register
-                    </NavLink>
+                    {sessionStorage.getItem("userRole") === null && (
+                      <NavLink
+                        className="dropdown-item"
+                        to="/RegisterForm.html"
+                      >
+                        Register
+                      </NavLink>
+                    )}
                   </li>
                   <li>
-                    <NavLink className="dropdown-item" to="/LoginForm.html">
-                      Login
-                    </NavLink>
+                    {sessionStorage.getItem("userRole") === null && (
+                      <NavLink className="dropdown-item" to="/LoginForm.html">
+                        Login
+                      </NavLink>
+                    )}
                   </li>
                   <li>
                     {!!sessionStorage.getItem("userRole") && (

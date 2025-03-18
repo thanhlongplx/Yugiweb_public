@@ -1,0 +1,44 @@
+{
+  "questions": [
+    {
+      "question": "Rabbits can see what's behind themselves without turning their heads.",
+      "correct_answer": "True"
+    },
+    {
+      "question": "The ghosts in 'Pac-Man' and 'Ms. Pac-Man' have completely different behavior.",
+      "correct_answer": "True"
+    },
+    {
+      "question": "The first 'Metal Gear' game was released for the PlayStation 1.",
+      "correct_answer": "False"
+    },
+    {
+      "question": "Faust is a playable character in 'Guilty Gear Xrd Revelator'.",
+      "correct_answer": "True"
+    },
+    {
+      "question": "Valve's 'Portal' and 'Half-Life' franchises exist within the same in-game universe.",
+      "correct_answer": "True"
+    },
+    {
+      "question": "Time on Computers is measured via the EPOX System.",
+      "correct_answer": "False"
+    },
+    {
+      "question": "Ottawa is the capital of Canada.",
+      "correct_answer": "True"
+    },
+    {
+      "question": "Bob Ross was a US Air Force pilot.",
+      "correct_answer": "False"
+    },
+    {
+      "question": "In Heroes of the Storm, the Cursed Hollow map gimmick requires players to kill the undead to curse the enemy team.",
+      "correct_answer": "False"
+    },
+    {
+      "question": "Night on Bald Mountain was one of the musical pieces featured in Disney's 1940's film Fantasia.",
+      "correct_answer": "True"
+    }
+  ]
+}

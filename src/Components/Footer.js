@@ -4,12 +4,12 @@ class Footer extends Component {
   render() {
     return (
       <div>
-        <footer className="bg-dark py-4 mb-0">
+        <footer className="bg-dark py-4 mb-0 position-fixed bottom-0 w-100">
           <div className="container px-5">
             <div className="row align-items-center justify-content-between flex-column flex-sm-row">
               <div className="col-auto">
                 <div className="small m-0 text-white">
-                  Copyright © Your Website 2023
+                  Copyright © YugiWeb 2025_BY Le Thanh Long
                 </div>
               </div>
               <div className="col-auto">

@@ -19,6 +19,8 @@ import CoinManager from "../Components/Ad/CoinManager.js";
 import AccountManager from "../Components/Ad/AccountManager.js";
 import Community from "../Components/Community/community.js";
 import UserDetail from "../Components/Community/UserDetail.js";
+import FeedbackList from "../Components/Ad/feedbackManager.js";
+import FriendList from "../Components/Community/FriendList.js";
 
 class DieuHuongURL extends Component {
   render() {
@@ -45,6 +47,8 @@ class DieuHuongURL extends Component {
             <Route path="/user/:username" element={<UserDetail />} />
             <Route path="/DarkAttributeMonsters.html" element={<DarkAttributeMonsters />} />
             <Route path="/CoinManager.html" element={<CoinManager />} />
+            <Route path="/FeedbackList.html" element={<FeedbackList />} />
+            <Route path="/FriendList.html" element={<FriendList />} />
           </Routes>
         </div>
       </Router>

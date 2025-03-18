@@ -11,13 +11,23 @@
 .card:hover .delete-btn {
   display: block; /* Hiển thị nút khi hover */
 }
+.card {
+  border-radius: 100%;
+}
 
 .delete-btn {
-  display: none; /* Ẩn nút mặc định */
   background-color: red; /* Nền đỏ cho nút xóa */
   position: relative;
-
-  height: 10%;
+  width: 50%;
+  border-radius: 50px;
+  color: white;
+  border: solid black;
+  cursor: pointer;
+}
+.give-btn {
+  background-color: green; /* Nền đỏ cho nút xóa */
+  position: relative;
+  width: 50%;
   border-radius: 50px;
   color: white;
   border: solid black;

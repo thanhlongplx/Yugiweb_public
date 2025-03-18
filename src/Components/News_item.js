@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Nav from "./Css/Nav.css";import { height } from "@fortawesome/free-solid-svg-icons/fa0";
+import "./Css/Nav.css"; // Đảm bảo rằng đường dẫn này là chính xác
 
-class News_item extends React.Component {
+class NewsItem extends React.Component {
   // Hàm chuyển đổi tên bài viết thành URL-friendly
   chuyenDoi = (str) => {
     str = str
@@ -21,15 +21,10 @@ class News_item extends React.Component {
     return str;
   };
 
-  // Hàm cắt ngắn mô tả
-  shortenDescription = (desc, limit = 20) => {
-    return desc.length > limit ? desc.substring(0, limit) + "..." : desc;
-  };
-
   render() {
     return (
-      <div className="col col-lg-2  " style={{ height: "150px" }}>
-        <div className="card">
+      <div className="col-lg-3 col-md-4 col-sm-6 mb-4">
+        <div className="cardItem h-100">
           <Link
             to={`/chi-tiet/${this.chuyenDoi(this.props.ten)}/${
               this.props.tinId
@@ -37,7 +32,7 @@ class News_item extends React.Component {
           >
             <img
               src={this.props.hinhAnh}
-              className="img-fluid"
+              className="card-img-top img-fluid"
               alt={this.props.ten}
             />
           </Link>
@@ -47,4 +42,4 @@ class News_item extends React.Component {
   }
 }
 
-export default News_item;
+export default NewsItem;

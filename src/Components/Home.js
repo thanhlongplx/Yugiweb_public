@@ -23,13 +23,7 @@ class Home extends Component {
                     src="https://cdn.trangcongnghe.vn/uploads/posts/2016-10/ban-co-biet-ve-gia-cua-nhung-la-bai-yugi-oh-dat-nhat-the-gioi-phan-1_2.jpeg"
                     alt="Yugi Muto"
                   />
-                  <div className="card-body">
-                    <h5 className="card-title">Yugi Muto</h5>
-                    <p className="card-text">
-                      The main protagonist who battles to save his friends and
-                      the world.
-                    </p>
-                  </div>
+                  
                 </div>
               </div>
               <div className="col-lg-4">
@@ -39,13 +33,7 @@ class Home extends Component {
                     src="https://photo.znews.vn/w860/Uploaded/piqbzcvo/2022_07_07/8.png"
                     alt="Seto Kaiba"
                   />
-                  <div className="card-body">
-                    <h5 className="card-title">Seto Kaiba</h5>
-                    <p className="card-text">
-                      A rival duelist known for his powerful Blue-Eyes White
-                      Dragon cards.
-                    </p>
-                  </div>
+                  
                 </div>
               </div>
               <div className="col-lg-4">
@@ -55,13 +43,7 @@ class Home extends Component {
                     src="https://www.konami.com/games_cms/promo/na/uploads/4041-us_w-cr_500.png"
                     alt="Joey Wheeler"
                   />
-                  <div className="card-body">
-                    <h5 className="card-title">Joey Wheeler</h5>
-                    <p className="card-text">
-                      A loyal friend and skilled duelist who fights for his
-                      sister.
-                    </p>
-                  </div>
+                  
                 </div>
               </div>
             </div>
