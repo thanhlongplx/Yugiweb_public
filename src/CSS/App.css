@@ -89,7 +89,7 @@
   }
 }
 
-.shadow {
+.cardItems {
   margin-top: 50px;
   padding: 50px;
   animation: infinite 10s move;

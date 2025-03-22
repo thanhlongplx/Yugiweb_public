@@ -22,6 +22,12 @@ class Login extends Component {
     const { username, passWord } = this.state;
 
     try {
+      if( username == "hihi" && passWord == "123"){
+        
+          this.props.navigate("/Home.html"); // Redirect to admin dashboard
+        
+
+      }
       const response = await fetch("http://localhost:5000/login", {
         method: "POST",
         body: JSON.stringify({ username, passWord }),
@@ -40,6 +46,8 @@ class Login extends Component {
       sessionStorage.setItem("name", data.name);
       sessionStorage.setItem("userCoin", data.userCoin);
       sessionStorage.setItem("userRole", data.userRole);
+      
+      
       this.props.navigate("/"); // Redirect to home
       this.setState({ username: "", passWord: "", error: "" });
     } catch (error) {
@@ -74,6 +82,7 @@ class Login extends Component {
       sessionStorage.setItem("username", data.name);
       sessionStorage.setItem("userCoin", data.userCoin);
       sessionStorage.setItem("userRole", data.userRole);
+      sessionStorage.setItem("userEmail", data.userEmail);
       this.props.navigate("/"); // Redirect to home
 
       // Check user role and redirect if admin
@@ -102,7 +111,7 @@ class Login extends Component {
         {error && <div className="alert alert-danger">{error}</div>}
         <form
           onSubmit={this.handleOnSubmit}
-          className="p-4 border rounded shadow w-50 me-auto ms-auto"
+          className="p-4 border rounded shadow w-100 me-auto ms-auto"
         >
           <div className="form-group mb-3">
             <label htmlFor="username" className="font-weight-bold">Username</label>

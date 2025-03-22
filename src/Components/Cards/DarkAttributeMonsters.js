@@ -49,7 +49,7 @@ const DarkAttributeMonsters = () => {
   };
 
   return (
-    <div>
+    <div className="bg-dark">
       {/* Header Section */}
 
       <div className="container py-5">
@@ -64,22 +64,7 @@ const DarkAttributeMonsters = () => {
           />
         </div>
         {/* Danh mục dưới header */}
-        <div className="bg-light py-2">
-          <div className="container">
-            <ul className="nav justify-content-center">
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/WaterCards.html">
-                  Water Cards
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/BlueEyes.html">
-                  Blue Eyes
-                </NavLink>
-              </li>
-            </ul>
-          </div>
-        </div>
+        
         <div className="row">
           {filteredCards.slice(0, visibleCount).map((card) => (
             <News_item

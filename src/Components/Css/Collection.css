@@ -12,6 +12,7 @@
   display: block; /* Hiển thị nút khi hover */
 }
 .card {
+  padding: 0px;
   border-radius: 100%;
 }
 

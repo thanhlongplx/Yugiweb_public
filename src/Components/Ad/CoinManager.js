@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Spinner, Alert, Modal, Button, Form, Badge } from "react-bootstrap";
 
 const CoinManager = () => {
   const [users, setUsers] = useState([]);
@@ -8,6 +9,8 @@ const CoinManager = () => {
   const [error, setError] = useState(null);
   const [editingUser, setEditingUser] = useState(null);
   const [newCoinAmount, setNewCoinAmount] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -31,6 +34,7 @@ const CoinManager = () => {
   const handleEditUser = (user) => {
     setEditingUser(user);
     setNewCoinAmount(user.coin);
+    setShowModal(true);
   };
 
   const handleUpdateCoin = async () => {
@@ -42,7 +46,7 @@ const CoinManager = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ coin: newCoinAmount }),
+          body: JSON.stringify({ coin: parseInt(newCoinAmount) }),
         }
       );
 
@@ -52,104 +56,220 @@ const CoinManager = () => {
 
       const updatedUser = await response.json();
 
-      // Cập nhật danh sách người dùng
+      // Update user list
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
           user.email === updatedUser.email ? updatedUser : user
         )
       );
 
-      setEditingUser(null);
-      setNewCoinAmount("");
+      setUpdateSuccess(true);
+      setTimeout(() => {
+        setShowModal(false);
+        setEditingUser(null);
+        setNewCoinAmount("");
+        setUpdateSuccess(false);
+      }, 1500);
     } catch (err) {
       setError(err.message);
     }
   };
 
-  if (loading) {
-    return <div>Loading users...</div>;
-  }
+  const closeModal = () => {
+    setShowModal(false);
+    setEditingUser(null);
+    setNewCoinAmount("");
+  };
 
-  if (error) {
-    return <div>Error: {error}</div>;
+  if (loading) {
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "100vh" }}
+      >
+        <Spinner animation="border" variant="primary" />
+        <span className="ms-2">Loading users...</span>
+      </div>
+    );
   }
 
   return (
-    <div className="d-flex flex-column" style={{ minHeight: "100vh" }}>
+    <div className="d-flex flex-column min-vh-100 bg-dark">
       {/* Header */}
-      <header className="bg-primary text-white p-3">
-        <h1 className="h4 text-center">Quản Lý Coin</h1>
+      <header className="bg-dark border-2 border text-white p-3 sticky-top shadow-sm">
+        <div className="container">
+          <div className="d-flex justify-content-between align-items-center">
+            <h1 className="h4 mb-0">Coin Manager</h1>
+            <Link to="/Admin.html" className="btn btn-outline-light btn-sm">
+              Back to Admin
+            </Link>
+          </div>
+        </div>
       </header>
 
       {/* Main Content */}
-      <div className="flex-grow-1 p-4">
+      <div className="bg-dark flex-grow-1 py-4 bg-light">
         <div className="container">
-          <h2 className="mb-4">Quản lý Số Coin</h2>
+          {error && (
+            <Alert variant="danger" dismissible onClose={() => setError(null)}>
+              Error: {error}
+            </Alert>
+          )}
 
-          <div className="mb-3">
-            <Link to="/Admin.html" className="btn btn-primary me-2">
-              Quay lại
-            </Link>
+          <div className="card bg-dark shadow-sm mb-4">
+            <div className="card-header bg-light d-flex justify-content-between align-items-center">
+              <h2 className="h5 mb-0">User Coin Management</h2>
+              <Badge bg="primary" pill>
+                {users.length} Users
+              </Badge>
+            </div>
+            {/* Phan bang ben tren */}
+            <div className="card-body btn-outline-light bg-dark p-0">
+              <div className="table-responsive">
+                <table className="table table-hover border-2 border  table-striped align-middle mb-0">
+                  <thead className="table-dark">
+                    <tr>
+                      <th>Username</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Coin Balance</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="table-dark">
+                    {users.map((user) => (
+                      <tr key={user.email}>
+                        <td className="fw-bold">{user.username}</td>
+                        <td>{user.name}</td>
+                        <td>{user.email}</td>
+                        <td>
+                          <Badge bg="success" className="fs-6">
+                            {user.coin}
+                          </Badge>
+                        </td>
+                        <td>
+                          <Button
+                            variant="outline-light"
+                            size="sm"
+                            onClick={() => handleEditUser(user)}
+                          >
+                            <i className="bi bi-pencil me-1"></i> Edit Coins
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
 
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Coin</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user.email}>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
-                  <td>{user.coin}</td>
-                  <td>
-                    <button
-                      className="btn btn-info btn-sm"
+          <div className="row">
+            {users.map((user) => (
+              <div className="col-md-6 col-lg-4 mb-4" key={user.email}>
+                <div className="card h-100 border-0 shadow-sm user-card">
+                  <div className="card-header bg-dark text-white">
+                    <h5 className="mb-0">{user.username}</h5>
+                  </div>
+                  <div className="card-body">
+                    <div className="mb-3">
+                      <small className="text-muted d-block">Name</small>
+                      <div>{user.name}</div>
+                    </div>
+                    <div className="mb-3">
+                      <small className="text-muted d-block">Email</small>
+                      <div>{user.email}</div>
+                    </div>
+                    <div className="mb-3">
+                      <small className="text-muted d-block">Coin Balance</small>
+                      <div className="d-flex align-items-center">
+                        <i className="bi bi-coin text-warning me-2 fs-4"></i>
+                        <span className="fs-4 fw-bold">{user.coin}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="card-footer bg-white border-0">
+                    <Button
+                      variant="primary"
+                      className="w-100"
                       onClick={() => handleEditUser(user)}
                     >
-                      Chỉnh sửa Coin
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {editingUser && (
-            <div className="editCard mt-3 p-2">
-              <h5 className="text-white">Chỉnh sửa số Coin</h5>
-              <input
-                type="number"
-                value={newCoinAmount}
-                onChange={(e) => setNewCoinAmount(e.target.value)}
-                className="form-control mb-2 text-white bg-black"
-                placeholder="Số coin mới"
-              />
-              <button className="btn btn-success" onClick={handleUpdateCoin}>
-                Cập nhật
-              </button>
-              <button
-                className="btn btn-secondary ms-2"
-                onClick={() => setEditingUser(null)}
-              >
-                Hủy
-              </button>
-            </div>
-          )}
+                      <i className="bi bi-pencil-square me-2"></i>
+                      Edit Coin Balance
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
+      {/* Footer */}
+      <footer className="bg-dark text-white text-center py-3 mt-auto">
+        <div className="container">
+          <small>
+            Coin Manager Admin Panel &copy; {new Date().getFullYear()}
+          </small>
+        </div>
+      </footer>
+
+      {/* Edit Modal */}
+      <Modal show={showModal} onHide={closeModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            Update Coin Balance - {editingUser?.username}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {updateSuccess ? (
+            <Alert variant="success">Coin balance updated successfully!</Alert>
+          ) : (
+            <Form>
+              <Form.Group className="mb-3">
+                <Form.Label>Current Balance:</Form.Label>
+                <h4>{editingUser?.coin}</h4>
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>New Coin Balance:</Form.Label>
+                <Form.Control
+                  type="number"
+                  value={newCoinAmount}
+                  onChange={(e) => setNewCoinAmount(e.target.value)}
+                  placeholder="Enter new coin amount"
+                  autoFocus
+                />
+              </Form.Group>
+            </Form>
+          )}
+        </Modal.Body>
+        {!updateSuccess && (
+          <Modal.Footer>
+            <Button variant="secondary" onClick={closeModal}>
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handleUpdateCoin}
+              disabled={!newCoinAmount || isNaN(parseInt(newCoinAmount))}
+            >
+              Update Balance
+            </Button>
+          </Modal.Footer>
+        )}
+      </Modal>
+
       <style jsx>{`
-        header {
-          position: sticky;
-          top: 0;
-          z-index: 100;
+        .user-card {
+          transition: transform 0.2s, box-shadow 0.2s;
         }
+        .user-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Add Bootstrap Icons */
+        @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css");
       `}</style>
     </div>
   );

@@ -46,8 +46,8 @@ class Nav extends Component {
     const { username, userCoin, userRole } = this.state;
 
     return (
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div className="container px-5">
+      <nav className="  navbar navbar-expand-lg navbar-dark bg-black fixed-top">
+        <div className="container p-0">
           <NavLink className="navbar-brand" to="/">
             <img
               width="120"
@@ -71,66 +71,60 @@ class Nav extends Component {
 
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+              {/* Customer Links */}
+
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/Collection.html">
+                  My Collection
+                </NavLink>
+              </li>
               {userRole === "customer" && (
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/Collection.html">
-                    My collection
-                  </NavLink>
-                </li>
-              )}
-              {userRole === "admin" && (
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/CoinManager.html">
-                    Coin Manager
-                  </NavLink>
-                </li>
-              )}
-              {userRole === "admin" && (
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/FeedbackList.html">
-                    Feedback List
-                  </NavLink>
-                </li>
+                <>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/MiniGame.html">
+                      MiniGame
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/FriendList.html">
+                      Friends
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/Community.html">
+                      Community
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/Contact.html">
+                      Contact
+                    </NavLink>
+                  </li>
+                </>
               )}
 
-              {userRole === "customer" && (
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/MiniGame.html">
-                    MiniGame
-                  </NavLink>
-                </li>
-              )}
-              {userRole === "customer" && (
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/FriendList.html">
-                    Friends
-                  </NavLink>
-                </li>
-              )}
-              {userRole === "customer" && (
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/Community.html">
-                    Community
-                  </NavLink>
-                </li>
-              )}
-              {userRole === "customer" && (
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/Contact.html">
-                    Contact
-                  </NavLink>
-                </li>
-              )}
-
-              {/* Admin-specific link */}
+              {/* Admin Links */}
               {userRole === "admin" && (
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/AccountManager.html">
-                    Account Manager
-                  </NavLink>
-                </li>
+                <>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/CoinManager.html">
+                      Coin Manager
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/FeedbackList.html">
+                      Feedback List
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/AccountManager.html">
+                      Account Manager
+                    </NavLink>
+                  </li>
+                </>
               )}
 
+              {/* User Dropdown */}
               <li className="nav-item dropdown">
                 <button
                   className="nav-link dropdown-toggle btn btn-link"
@@ -142,32 +136,34 @@ class Nav extends Component {
                   {username}
                 </button>
                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li>
-                    {sessionStorage.getItem("userRole") === null && (
-                      <NavLink
-                        className="dropdown-item"
-                        to="/RegisterForm.html"
-                      >
-                        Register
-                      </NavLink>
-                    )}
-                  </li>
-                  <li>
-                    {sessionStorage.getItem("userRole") === null && (
-                      <NavLink className="dropdown-item" to="/LoginForm.html">
-                        Login
-                      </NavLink>
-                    )}
-                  </li>
-                  <li>
-                    {!!sessionStorage.getItem("userRole") && (
+                  {sessionStorage.getItem("userRole") === null && (
+                    <>
+                      <li>
+                        <NavLink
+                          className="dropdown-item"
+                          to="/RegisterForm.html"
+                        >
+                          Register
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink className="dropdown-item" to="/LoginForm.html">
+                          Login
+                        </NavLink>
+                      </li>
+                    </>
+                  )}
+                  {sessionStorage.getItem("userRole") && (
+                    <li>
                       <NavLink className="dropdown-item" to="/LogoutForm.html">
                         Logout
                       </NavLink>
-                    )}
-                  </li>
+                    </li>
+                  )}
                 </ul>
               </li>
+
+              {/* Buy Cards Dropdown */}
               <li className="nav-item dropdown">
                 <NavLink
                   className="nav-link dropdown-toggle"
@@ -177,7 +173,7 @@ class Nav extends Component {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Buy cards
+                  Buy Cards
                 </NavLink>
                 <ul
                   className="dropdown-menu"
@@ -190,7 +186,7 @@ class Nav extends Component {
                   </li>
                   <li>
                     <NavLink className="dropdown-item" to="/BlueEyes.html">
-                      Blue eyes
+                      Blue Eyes
                     </NavLink>
                   </li>
                   <li>
@@ -208,14 +204,14 @@ class Nav extends Component {
                   </li>
                 </ul>
               </li>
-              <li className=" list-group-item d-flex justify-content-between align-items-center text-white bg-dark">
-                <div className="d-flex align-items-center">
-                  <img
-                    src="/YugiCoin2.png"
-                    alt="YugiCoin"
-                    style={{ width: "30px" }}
-                  />
-                </div>
+
+              {/* Coin Display */}
+              <li className="nav-item d-flex align-items-center text-white">
+                <img
+                  src="/YugiCoin2.png"
+                  alt="YugiCoin"
+                  style={{ width: "30px", marginRight: "5px" }}
+                />
                 <span>: {this.formatNumber(userCoin)} YC</span>
               </li>
             </ul>

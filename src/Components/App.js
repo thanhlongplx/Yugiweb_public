@@ -1,5 +1,4 @@
 import React, { useState } from "react"; // Nhớ import useState
-import logo from "../logo.svg";
 import "../CSS/App.css";
 import Nav from "./Nav";
 import Home from "./Home";
@@ -10,14 +9,10 @@ import Contact from "./Contact";
 import DieuHuongURL from "../routers/DieuHuongURL";
 
 function App() {
-  
-  
-
   return (
     <div>
       <DieuHuongURL />
       <Footer />
-      
     </div>
   );
 }

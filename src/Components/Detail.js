@@ -122,7 +122,6 @@ class Detail extends Component {
     return baseValue + atkValue + defValue;
   }
 
-  // Cập nhật hàm addToCollection
   addToCollection = async () => {
     const { newsItem, collection } = this.state;
     // const userEmail = sessionStorage.getItem("userEmail");
@@ -223,10 +222,10 @@ class Detail extends Component {
     }
 
     return (
-      <div>
+      <div className="bg-dark ">
         <ToastContainer /> {/* Thêm ToastContainer vào render */}
         <main className="flex-shrink-0">
-          <div className="container my-4">
+          <div className="container ">
             <div
               className="text-center"
               style={{
@@ -242,13 +241,12 @@ class Detail extends Component {
               <h2 className="text-white">{newsItem.name}</h2>
               <img
                 src={newsItem.card_images[0].image_url}
-                className="img-fluid mb-4"
-                style={{ width: "50%" }}
+                className="img-fluid w-50 mb-4"
                 alt={newsItem.name}
               />
               <p
                 className="text-white font-weight-bold"
-                style={{ fontSize: "1.25em" }}
+                style={{ fontSize: "1.25em", textAlign: "justify" }}
               >
                 {newsItem.desc}
               </p>
@@ -264,7 +262,7 @@ class Detail extends Component {
                     newsItem.name
                   );
 
-                  const confirmMessage = `Bạn có chắc chắn muốn thêm thẻ bài này vào bộ sưu tập? Giá: ${cardValue} YugiCoin.`;
+                  const confirmMessage = `Are you sure to add this card into your collection? Price: ${cardValue} YugiCoin.`;
 
                   if (window.confirm(confirmMessage)) {
                     this.addToCollection();
@@ -293,7 +291,7 @@ class Detail extends Component {
             </div>
           </div>
           <div className="container">
-            <h1 className="text-center">Thẻ bài tương tự</h1>
+            <h1 className="text-center text-white">Similar Cards</h1>
             {relatedItems.length > 0 ? (
               <div className="row">
                 {relatedItems.map((item) => (
@@ -319,7 +317,7 @@ class Detail extends Component {
                 ))}
               </div>
             ) : (
-              <p className="text-center">Không có thẻ bài tương tự nào.</p>
+              <p className="text-center">You don't have any similar cards.</p>
             )}
           </div>
         </main>

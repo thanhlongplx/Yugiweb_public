@@ -6,14 +6,15 @@ import {
   FacebookAuthProvider,
 } from "firebase/auth";
 
+//Thay thế ở đây nếu muốn đăng nhập gg
 const firebaseConfig = {
-  apiKey: "AIzaSyCkeUJpOP5ZESTTpJwwx_0blIZf1F7wugY",
-  authDomain: "yugiweb-c26a9.firebaseapp.com",
-  projectId: "yugiweb-c26a9",
-  storageBucket: "yugiweb-c26a9.firebasestorage.app",
-  messagingSenderId: "266042624122",
-  appId: "1:266042624122:web:bb59d704e3903d17ea93c3",
-  measurementId: "G-YQWZ5RWF3M",
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
+  storageBucket: "p",
+  messagingSenderId: "",
+  appId: "",
+  measurementId: "",
 };
 
 const app = initializeApp(firebaseConfig);

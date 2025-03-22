@@ -8,11 +8,14 @@ const path = require("path"); // Import thư viện path
 
 // Kết nối đến MongoDB
 mongoose
-  .connect("mongodb://localhost:27017/", {
-    dbName: "Yugi-Web",
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(
+    "mongodb+srv://thanhlongkra:EEpuQe3jEX7jIN72@cluster0.etg69.mongodb.net/",
+    {
+      dbName: "Yugi-Web",
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
   .then(() => {
     console.log("Connected to Yugi-Web database");
   })
@@ -40,6 +43,7 @@ const FeedbackSchema = new mongoose.Schema({
   message: { type: String, required: true }, // Nội dung phản hồi
   date: { type: Date, default: Date.now }, // Ngày gửi phản hồi
   files: { type: [String], default: [] }, // Mảng chứa đường dẫn các tệp tải lên
+  cardImageName: { type: String, default: "" }, // Đường dẫn ảnh
 });
 const User = mongoose.model("users", UserSchema);
 const Feedback = mongoose.model("feedbacks", FeedbackSchema);
@@ -52,7 +56,11 @@ app.use(express.json());
 // app.use(cors());
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001"], // Cho phép cả hai địa chỉ frontend
+    origin: [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://localhost:3002",
+    ],
     credentials: true,
   })
 );
@@ -156,7 +164,7 @@ app.get("/api/friend-requests/:username", async (req, res) => {
 // API để gửi yêu cầu kết bạn
 app.post("/api/friend-request", async (req, res) => {
   const { senderUsername, receiverUsername } = req.body;
-  console.log(req.body);
+
   if (!senderUsername || !receiverUsername) {
     return res
       .status(400)
@@ -168,6 +176,11 @@ app.post("/api/friend-request", async (req, res) => {
     const receiver = await User.findOne({ username: receiverUsername });
     if (!receiver) {
       return res.status(404).send({ error: "Người nhận không tồn tại." });
+    }
+
+    // Kiểm tra xem sender đã gửi yêu cầu kết bạn chưa
+    if (receiver.friendRequests.includes(senderUsername)) {
+      return res.status(400).send({ error: "Yêu cầu kết bạn đã được gửi rồi." });
     }
 
     // Thêm senderUsername vào friendRequests của người nhận
@@ -217,7 +230,7 @@ app.post("/api/friend-request/accept", async (req, res) => {
 
     // Tìm người gửi yêu cầu kết bạn
     const sender = await User.findOne({ username: nameAcept });
-    console.log(sender);
+
     if (!sender) {
       return res
         .status(404)
@@ -247,11 +260,11 @@ app.post("/api/friend-request/accept", async (req, res) => {
 
 // API để gửi feedback
 app.post("/api/feedbacks", upload.array("files"), async (req, res) => {
-  const { name, email, phone, message } = req.body;
+  const { name, email, phone, message, cardImageName } = req.body;
 
-  // Kiểm tra các trường bắt buộc
+  // Check required fields
   if (!name || !email || !phone || !message) {
-    return res.status(400).send({ error: "Tất cả các trường là bắt buộc." });
+    return res.status(400).send({ error: "All fields are required." });
   }
 
   const newFeedback = new Feedback({
@@ -259,7 +272,8 @@ app.post("/api/feedbacks", upload.array("files"), async (req, res) => {
     email,
     phone,
     message,
-    files: req.files ? req.files.map((file) => file.path) : [], // Lưu đường dẫn các tệp
+    cardImageName, // Save card image name
+    files: req.files ? req.files.map((file) => file.path) : [], // Save file paths
   });
 
   try {
@@ -302,8 +316,6 @@ app.post("/login-google", async (req, res) => {
   const { email, name } = req.body;
 
   try {
-    console.log("Received request body:", req.body);
-
     // Kiểm tra xem email có hợp lệ không
     if (!email) {
       return res.status(400).send({ error: "Email là bắt buộc." });
@@ -337,6 +349,7 @@ app.post("/login-google", async (req, res) => {
       userUsername: user.username, // Trả về username
       userCoin: user.coin, // Trả về số tiền
       userRole: user.role, // Trả về vai trò
+      userEmail: user.email, // Trả về email
     });
   } catch (error) {
     console.error("Error during Google login:", error);
@@ -347,7 +360,6 @@ app.post("/login-facebook", async (req, res) => {
   const { email, name } = req.body;
 
   try {
-    console.log("Received request body:", req.body);
     let user = await User.findOne({ email });
 
     if (!user) {
@@ -385,12 +397,21 @@ app.post("/login-facebook", async (req, res) => {
 // API to update user information
 app.put("/user/update/:username", async (req, res) => {
   const { username } = req.params;
-  const { name, role } = req.body;
+  const { name, role, email } = req.body;
 
   try {
+    const updateData = { name, role }; // Đối tượng cập nhật ban đầu
+
+    // Kiểm tra xem email có tồn tại hay không
+    if (email) {
+      updateData.email = email; // Thêm email vào đối tượng cập nhật
+    } else {
+      updateData.email = "";
+    }
+
     const user = await User.findOneAndUpdate(
       { username },
-      { name, role }, // Cập nhật tên và vai trò
+      updateData, // Cập nhật với đối tượng động
       { new: true } // Return the updated document
     );
 
@@ -484,6 +505,7 @@ app.post("/login", async (req, res) => {
   if (!username || !passWord) {
     return res.status(400).send({ error: "Username và mật khẩu là bắt buộc." });
   }
+  
 
   // Tìm người dùng theo username
   const user = await User.findOne({ username }); // Thay đổi từ email sang username
@@ -592,6 +614,60 @@ app.post("/user/add-to-collection", async (req, res) => {
     res.status(500).send({ error: "Internal Server Error" });
   }
 });
+app.post("/user/add-to-collection-not-pay", async (req, res) => {
+  const { cardName, username, usernameGive } = req.body; // Thêm các thông số cần thiết
+
+  // Kiểm tra thông tin đầu vào
+  if (!cardName || !username || !usernameGive) {
+    return res
+      .status(400)
+      .send({ error: "Not enough information to add card to collection." });
+  }
+
+  try {
+    // Tìm người dùng muốn cho thẻ bài
+    const userGive = await User.findOne({ username: usernameGive });
+
+    // Kiểm tra xem username có trong danh sách bạn bè không
+    if (!userGive || !userGive.friends.includes(username) && userGive.role !== "admin") {
+      return res.status(404).send({ error: "User not found or not a friend." });
+    }
+
+    // Tìm người dùng mà thẻ bài được tặng cho
+    const user = await User.findOne({ username });
+
+    // Kiểm tra xem người dùng có tồn tại không
+    if (!user) {
+      return res.status(404).send({ error: "User not found." });
+    }
+
+    // Chuẩn hóa tên thẻ bài và bộ sưu tập
+    const normalizedCardName = cardName.trim().toLowerCase();
+    const normalizedCollection = user.collection.map((card) =>
+      card.trim().toLowerCase()
+    );
+
+    // Kiểm tra xem thẻ bài đã có trong bộ sưu tập chưa
+    if (normalizedCollection.includes(normalizedCardName)) {
+      return res
+        .status(400)
+        .send({ error: "Card is already in your collection." });
+    }
+
+    // Thêm thẻ bài vào bộ sưu tập
+    user.collection.push(cardName);
+    await user.save();
+
+    // Trả về thông báo thành công
+    res.send({
+      message: "Card added to collection successfully",
+      userCoin: user.coin,
+    });
+  } catch (error) {
+    console.error("Error adding card to collection:", error);
+    res.status(500).send({ error: "Internal Server Error" });
+  }
+});
 
 // Hàm tính giá trị thẻ bài (ví dụ)
 function calculateCardValue(level, atk, def, name) {
@@ -645,43 +721,36 @@ function calculateCardValue(level, atk, def, name) {
 // Khai báo router
 const router = express.Router();
 
-// const handleDeleteUser = async (email) => {
-//   if (window.confirm("Bạn có chắc muốn xóa người dùng này?")) {
-//     try {
-//       const response = await fetch(`http://localhost:5000/user/delete/${email}`, {
-//         method: "DELETE",
-//       });
-
-//       if (!response.ok) {
-//         throw new Error("Failed to delete user");
-//       }
-
-//       setUsers((prevUsers) => prevUsers.filter((user) => user.email !== email));
-//     } catch (err) {
-//       setError(err.message);
-//     }
-//   }
-// };
-
 app.delete("/api/friends/remove", async (req, res) => {
   const { username, friendUsername } = req.body; // Lấy tên người dùng và tên người bạn cần xóa từ body
 
   try {
-    // Tìm người dùng
+    // Tìm người dùng hiện tại
     const user = await User.findOne({ username });
     if (!user) {
       return res.status(404).send({ error: "User not found." });
     }
-    console.log(friendUsername);
+
+    // Tìm người bạn cần xóa
+    const friend = await User.findOne({ username: friendUsername });
+    if (!friend) {
+      return res.status(404).send({ error: "Friend not found." });
+    }
 
     // Kiểm tra xem người bạn có trong danh sách không
     if (!user.friends.includes(friendUsername)) {
       return res.status(404).send({ error: "Friend not found in the list." });
     }
 
-    // Xóa người bạn khỏi danh sách bạn bè
+    // Xóa người bạn khỏi danh sách bạn bè của người dùng hiện tại
     user.friends = user.friends.filter((friend) => friend !== friendUsername);
+
+    // Xóa tên người dùng hiện tại khỏi danh sách bạn bè của người bạn
+    friend.friends = friend.friends.filter((friend) => friend !== username);
+
+    // Lưu lại cả hai người dùng
     await user.save();
+    await friend.save();
 
     res.status(200).send({ message: "Friend removed successfully." });
   } catch (error) {
@@ -690,11 +759,11 @@ app.delete("/api/friends/remove", async (req, res) => {
   }
 });
 // API để xóa người dùng
-app.delete("/user/delete/:email", async (req, res) => {
-  const { email } = req.params;
+app.delete("/user/delete/:username", async (req, res) => {
+  const { username } = req.params;
 
   try {
-    const user = await User.findOneAndDelete({ email });
+    const user = await User.findOneAndDelete({ username });
     if (!user) {
       return res.status(404).send({ error: "User not found" });
     }
@@ -739,6 +808,6 @@ router.post("/remove-from-collection", async (req, res) => {
 app.use("/user", router);
 
 // Lắng nghe trên cổng 5000
-app.listen(5000, () => {
+app.listen(5000, "0.0.0.0", () => {
   console.log("App listening at port 5000");
 });

@@ -96,7 +96,7 @@ class Register extends Component {
 
         <form
           onSubmit={this.handleOnSubmit}
-          className="p-4 border rounded shadow w-50 me-auto ms-auto"
+          className="p-4 border rounded shadow w-100 me-auto ms-auto"
         >
           <div className="form-group mb-3">
             <label htmlFor="name" className="font-weight-bold">
