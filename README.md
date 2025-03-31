@@ -31,7 +31,8 @@ In the project directory, you can:
 THIS PROJECT NEED THIS INFORM TO RUN: </br>
 ![image](https://github.com/user-attachments/assets/fcb05a0a-00f7-45dd-b3d9-c4d00156078b)</br>
 - If you want to run this web without login with google, you can comment all code in src/components/firebase.js</br>
-- Then, when we access home page of this web, we can see:</br> ![image](https://github.com/user-attachments/assets/7687afed-2546-4d41-af40-dfe73fb8e7ab)</br>
+- Then, when we access home page of this web, we can see:</br>
+![image](https://github.com/user-attachments/assets/7687afed-2546-4d41-af40-dfe73fb8e7ab)</br>
 And here are the other interfaces:</br>
 - My collection:</br> ![image](https://github.com/user-attachments/assets/03d5a707-0392-4952-abda-2701fb05412b)</br>
 - Minigame:</br> ![image](https://github.com/user-attachments/assets/84ce32da-5dd7-435c-9914-9514c74235e0)</br>
