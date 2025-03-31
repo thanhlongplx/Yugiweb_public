@@ -1,70 +1,55 @@
-# Getting Started with Create React App
+# **About Project**
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+"Yugi Web"
+Used: 
+- ReactJS, HTML, CSS, Js, Bootstrap, Mongodb, API on " https://ygoprodeck.com/api-guide/ "
+- Login with Google Account with Firebase.
 
-## Available Scripts
+# **Target of Yugi Web**
 
-In the project directory, you can run:
+- Connect with the community and help them collect lots of Yugioh cards, make friends and share cards with each other
+- Popularized and further reinforced the success of the Yugioh King of Games series
 
-### `npm start`
+# **How to run this project**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+In the project directory, you can:
+- On terminal, run "npm i"
+- Access "backend" directory: On terminal, run "nodemon server.js" to run back end at port 5000 
+- Then, access root directory and run "npm start" to run this project on browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+# **Function**
 
-### `npm test`
+- Access web and search cards
+- Access information of cards
+- Buy cards
+- Sell cards
+- Making friends(Request and Accept)
+- Give a card to another user (if you and they are friends)
+- Sort cards by attack points, level points or more...
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# **Demo the interface**
+THIS PROJECT NEED THIS INFORM TO RUN
+- ![image](https://github.com/user-attachments/assets/fcb05a0a-00f7-45dd-b3d9-c4d00156078b)
+- If you want to run this web without login with google, you can comment all code in src/components/firebase.js
+- Then, when we access home page of this web, we can see: ![image](https://github.com/user-attachments/assets/7687afed-2546-4d41-af40-dfe73fb8e7ab)
+And here are the other interfaces:
+- My collection: ![image](https://github.com/user-attachments/assets/03d5a707-0392-4952-abda-2701fb05412b)
+- Minigame: ![image](https://github.com/user-attachments/assets/84ce32da-5dd7-435c-9914-9514c74235e0)
+- Friends: ![image](https://github.com/user-attachments/assets/83173c1e-e01c-47f4-9129-130d1e747c7d)
+- Comunity: ![image](https://github.com/user-attachments/assets/6f5779cf-c3e2-4eb5-8713-2e0ebcc61666)
+- Contact: ![image](https://github.com/user-attachments/assets/26ab6884-8d0e-42ae-ac2c-904f07ea935b), ![image](https://github.com/user-attachments/assets/65f02ba7-3a52-4f82-aea6-80dc3f529de9)
+- Show cards in api: ![image](https://github.com/user-attachments/assets/a453a85a-226e-448d-9201-755cb6a0a239)
+- User can see more info of the card when click to them: ![image](https://github.com/user-attachments/assets/7bf08ae8-3b4b-40fb-ba05-0506f09101a2)
+- Card prices are dynamically determined by formulas and not entirely dependent on the API: ![image](https://github.com/user-attachments/assets/0c824c2b-75d7-4413-a9df-c8e3226dc017)
+- Sell cards: ![image](https://github.com/user-attachments/assets/37df260d-573b-4141-9775-ee36d6336563)
+- Give card for friend: ![image](https://github.com/user-attachments/assets/22905ba7-ab29-479b-8f45-091fbf212412)
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+ 
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
