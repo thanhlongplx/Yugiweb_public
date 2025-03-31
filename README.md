@@ -28,8 +28,8 @@ In the project directory, you can:
 - Sort cards by attack points, level points or more...
 
 # **Demo the interface**
-THIS PROJECT NEED THIS INFORM TO RUN
-- ![image](https://github.com/user-attachments/assets/fcb05a0a-00f7-45dd-b3d9-c4d00156078b)
+THIS PROJECT NEED THIS INFORM TO RUN: 
+![image](https://github.com/user-attachments/assets/fcb05a0a-00f7-45dd-b3d9-c4d00156078b)
 - If you want to run this web without login with google, you can comment all code in src/components/firebase.js
 - Then, when we access home page of this web, we can see: ![image](https://github.com/user-attachments/assets/7687afed-2546-4d41-af40-dfe73fb8e7ab)
 And here are the other interfaces:
